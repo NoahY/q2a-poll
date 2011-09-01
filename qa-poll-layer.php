@@ -3,9 +3,15 @@
 	class qa_html_theme_layer extends qa_html_theme_base {
 		
 		function doctype(){
-			//qa_error_log($this->content);
+			//qa_error_log($this->content['navigation']);
 			if (qa_opt('poll_enable')) {
-				
+				global $qa_request;
+				if($this->template == 'questions' || $qa_request == 'polls') {
+					$this->content['navigation']['sub']['polls'] = array(
+					  'label' => qa_opt('poll_page_title'),
+					  'url' => qa_path_html('polls'),
+					);
+				}
 				if($this->template == 'ask') {
 					$this->content['form']['fields'][] = array(
 						'label' => qa_opt('poll_checkbox_text'),
