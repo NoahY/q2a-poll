@@ -12,6 +12,7 @@
 								$answer['parentid'], 'is_poll'
 							),true
 						);
+						if(!is_array($poll_array)) break;
 						if(@$poll_array['meta_value'] == '1') {  // check if already voted on single-vote poll
 							global $qa_login_userid, $qa_cookieid;
 							$answers = qa_db_select_with_pending(qa_db_full_child_posts_selectspec($qa_login_userid, $answer['parentid']));
@@ -36,6 +37,71 @@
 							);
 						}
 						
+					// buddypress integration
+					
+						if (qa_opt('buddypress_integration_enable')) {
+				
+							require_once QA_INCLUDE_DIR.'qa-app-users.php';
+							
+							$publictohandle=qa_get_public_from_userids(array($userid));
+							$handle=@$publictohandle[$userid];
+							
+							if($event != 'q_post') {
+								$parent = qa_db_read_one_assoc(
+									qa_db_query_sub(
+										'SELECT * FROM ^posts WHERE postid=#',
+										$params['parentid']
+									),
+									true
+								);
+								if($parent['type'] == 'A') {
+									$parent = qa_db_read_one_assoc(
+										qa_db_query_sub(
+											'SELECT * FROM ^posts WHERE postid=#',
+											$parent['parentid']
+										),
+										true
+									);					
+								}
+								$anchor = qa_anchor(($event == 'a_post'?'A':'C'), $params['postid']);
+								$suffix = preg_replace('/%([^%]+)%/','<a href="'.qa_path_html(qa_q_request($parent['postid'], $parent['title']), null, qa_opt('site_url'),null,$anchor).'">$1</a>',$suffix);
+								$activity_url = qa_path_html(qa_q_request($parent['postid'], $parent['title']), null, qa_opt('site_url'));
+								$context = $suffix.'"<a href="'.$activity_url.'">'.$parent['title'].'</a>".';
+							}
+							else {
+								$activity_url = qa_path_html(qa_q_request($params['postid'], $params['title']), null, qa_opt('site_url'));
+								$context = ' question "<a href="'.$activity_url.'">'.$params['title'].'</a>".';
+							}
+							
+							$action = '<a href="' . bp_core_get_user_domain($userid) . '" rel="nofollow">'.$handle.'</a> posted a'.$context;
+
+							if(qa_opt('buddypress_integration_include_content')) {
+
+								$informat=$params['format'];					
+
+								$viewer=qa_load_viewer($content, $informat);
+								
+								if (qa_opt('buddypress_integration_max_post_length') && strlen( $content ) > (int)qa_opt('buddypress_integration_max_post_length') ) {
+									$content = substr( $content, 0, (int)qa_opt('buddypress_integration_max_post_length') );
+									$content = $content.' ...';
+								}		
+									
+								$content=$viewer->get_html($content, $informat, array());
+							}
+							else $content = null;
+
+							bp_activity_add(
+								array(
+									'action' => $action,
+									'content' => $content,
+									'primary_link' => $activity_url,
+									'component' => 'bp-qa',
+									'type' => 'activity_qa',
+									'user_id' => $userid,
+									'item_id' => null
+								)
+							);
+						}
 						break;
 					case 'q_post':
 						if(qa_post_text('is_poll')) {
