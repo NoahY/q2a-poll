@@ -29,11 +29,12 @@
 						}
 						
 						// update answer for list
-						
-						qa_db_query_sub(
-							'UPDATE ^posts SET updated=NOW(), lastuserid=# WHERE postid=#',
-							$userid, $params['postid']
-						);				
+						if(qa_opt('poll_update_on_vote')) {
+							qa_db_query_sub(
+								'UPDATE ^posts SET updated=NOW(), lastuserid=# WHERE postid=#',
+								$userid, $params['postid']
+							);
+						}
 						
 						break;
 					case 'q_post':

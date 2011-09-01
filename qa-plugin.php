@@ -20,6 +20,7 @@
 
         qa_register_plugin_module('module', 'qa-poll-admin.php', 'qa_poll_admin', 'Poll Admin');
         qa_register_plugin_module('event', 'qa-poll-check.php', 'qa_poll_event', 'Poll Admin');
+        qa_register_plugin_module('page', 'qa-poll-page.php', 'qa_poll_page', 'Poll page');
         
         qa_register_plugin_layer('qa-poll-layer.php', 'Poll Layer');
                         

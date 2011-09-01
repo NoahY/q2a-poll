@@ -9,8 +9,13 @@ This is a plugin for **Question2Answer** that provides poll functionality.
 --------
 Features
 --------
-- allows creating questions as polls, which removes ability for others to answer or comment on them (vote only).
-- admin and mods can still answer and edit polls
+- allows creating questions as polls, which removes ability for others to answer, comment on, or vote down them  (vote up only).
+- adds qa-main-poll wrapper to qa-main for custom poll css
+- admin and mods can still answer, comment on, and edit polls
+- choose between multi-voting or single-voting poll on ask form
+- jQuery answer adding via ask form
+- answer updates when voted on (optional)
+- add a Polls page (optional)
 - adds text to poll question titles
 - all text fully customizable
 

@@ -14,6 +14,8 @@
 		    return 'You have already voted once.';
 		case 'poll_answers_text':
 		    return 'Answers:';
+		case 'poll_page_title':
+		    return 'Polls';
 		default:
 		    return null;				
 	    }
@@ -50,8 +52,10 @@
 		    }		    
 		}
                 qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
+                qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
                 qa_opt('poll_checkbox_text',qa_post_text('poll_checkbox_text'));
                 qa_opt('poll_question_title',qa_post_text('poll_question_title'));
+                qa_opt('poll_page_title',qa_post_text('poll_page_title'));
                 $ok = 'Settings Saved.';
             }
   
@@ -63,6 +67,13 @@
                 'label' => 'Enable polls',
                 'tags' => 'NAME="poll_enable"',
                 'value' => qa_opt('poll_enable'),
+                'type' => 'checkbox',
+            );
+
+            $fields[] = array(
+                'label' => 'Update date of answer on vote',
+                'tags' => 'NAME="poll_update_on_vote"',
+                'value' => qa_opt('poll_update_on_vote'),
                 'type' => 'checkbox',
             );
 
@@ -94,6 +105,12 @@
                 'label' => 'Text to add to answers list on ask form',
                 'tags' => 'NAME="poll_answers_text"',
                 'value' => qa_opt('poll_answers_text'),
+            );
+
+            $fields[] = array(
+                'label' => 'Poll page title',
+                'tags' => 'NAME="poll_page_title"',
+                'value' => qa_opt('poll_page_title'),
             );
 
             return array(           
