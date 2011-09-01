@@ -18,6 +18,9 @@ Features
 - add a Polls page (optional)
 - adds text to poll question titles
 - all text fully customizable
+- Buddypress integration if `Buddypress plugin` enabled
+
+.. _Buddypress plugin: https://github.com/NoahY/q2a-buddypress
 
 ------------
 Installation
