@@ -155,7 +155,17 @@
 			if(isset($this->poll)) $this->output('</DIV');
 		
 		}
-
+		
+		function nav_list($navigation, $class, $level=null)
+		{
+			global $qa_request;
+			if($qa_request == 'polls' && $class == 'nav-sub') {
+				qa_error_log($class);
+				unset($navigation['recent']['selected']);
+				$navigation['polls']['selected'] = true;
+			}
+			qa_html_theme_base::nav_list($navigation, $class, $level=null);
+		}
 
 		function vote_buttons($post) {
 
