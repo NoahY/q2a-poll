@@ -38,9 +38,9 @@
 						}
 						
 					// buddypress integration
-					
+						break;
 						if (qa_opt('buddypress_integration_enable')) {
-				
+						
 							require_once QA_INCLUDE_DIR.'qa-app-users.php';
 							
 							$publictohandle=qa_get_public_from_userids(array($userid));
