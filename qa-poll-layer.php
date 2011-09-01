@@ -128,7 +128,7 @@
 			qa_html_theme_base::doctype();
 		}
 		function head_custom() {
-			if($this->template == 'ask') {
+			if(qa_opt('poll_enable') && $this->template == 'ask') {
 				$this->output_raw('<script>
 	var poll_answer_index = 2;
 	jQuery("document").ready(function(){jQuery("#is_poll").removeAttr("checked")});
