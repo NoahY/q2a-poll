@@ -106,16 +106,15 @@
 
 							unset($this->content['q_view']['a_form']);					
 						}			
-						
-					}
-					if(isset($this->content['a_list']['as'])) {
-						foreach($this->content['a_list']['as'] as $idx => $answer) {
-							unset($this->content['a_list']['as'][$idx]['what']);
-							unset($this->content['a_list']['as'][$idx]['when']);
-							unset($this->content['a_list']['as'][$idx]['who']);
-							unset($this->content['a_list']['as'][$idx]['form']['buttons']['follow']);
-							if(@$this->content['a_list']['as'][$idx]['when_2']['prefix'] == qa_lang('main/edited').' ') {
-								$this->content['a_list']['as'][$idx]['when_2']['prefix'] = qa_lang('main/answered').' ';
+						if(isset($this->content['a_list']['as'])) {
+							foreach($this->content['a_list']['as'] as $idx => $answer) {
+								unset($this->content['a_list']['as'][$idx]['what']);
+								unset($this->content['a_list']['as'][$idx]['when']);
+								unset($this->content['a_list']['as'][$idx]['who']);
+								unset($this->content['a_list']['as'][$idx]['form']['buttons']['follow']);
+								if(@$this->content['a_list']['as'][$idx]['when_2']['prefix'] == qa_lang('main/edited').' ') {
+									$this->content['a_list']['as'][$idx]['when_2']['prefix'] = qa_lang('main/answered').' ';
+								}
 							}
 						}
 					}
