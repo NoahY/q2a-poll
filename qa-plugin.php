@@ -1,15 +1,15 @@
 <?php
         
 /*              
-        Plugin Name: Embed YouTube
-        Plugin URI: https://github.com/NoahY/q2a-embed
-        Plugin Description: Embed YouTube links
-        Plugin Version: 0.2
-        Plugin Date: 2011-07-30
+        Plugin Name: Polls
+        Plugin URI: https://github.com/NoahY/q2a-poll
+        Plugin Description: Ask poll questions
+        Plugin Version: 0.1
+        Plugin Date: 2011-09-05
         Plugin Author: NoahY
         Plugin Author URI:                              
         Plugin License: GPLv2                           
-        Plugin Minimum Question2Answer Version: 1.3
+        Plugin Minimum Question2Answer Version: 1.4
 */                      
                         
                         
