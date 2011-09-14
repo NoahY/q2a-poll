@@ -168,20 +168,21 @@
 				}
 				if($this->template == 'question') {
 					$this->output_raw('<style>
-	.qa-main-poll .qa-a-list-item .qa-voting {
+	poll .qa-a-list-item .qa-voting {
 		margin-bottom:0 !important;
 	}
-	.qa-main-poll .qa-a-list-item {
+	poll .qa-a-list-item {
+		padding-bottom:0 !important;
+		margin-bottom:0 !important;
+	}
+	poll .qa-a-list-item .qa-vote-buttons {
 		padding-bottom:0 !important;
 	}
-	.qa-main-poll .qa-a-list-item .qa-vote-buttons {
-		padding-bottom:0 !important;
-	}
-	.qa-main-poll .qa-a-list-item .qa-vote-one-button {
+	poll .qa-a-list-item .qa-vote-one-button {
 		margin-top:0 !important;
 		margin-bottom:0 !important;
 	}
-	</script>');
+	</style>');
 				}	
 			}	
 			qa_html_theme_base::head_custom();
@@ -190,9 +191,9 @@
 		// add wrapper div to style polls differently
 
 		function main() {
-			if(isset($this->poll)) $this->output('<DIV CLASS="qa-main-poll">');
+			if(isset($this->poll)) $this->output('<poll>');
 			qa_html_theme_base::main();
-			if(isset($this->poll)) $this->output('</DIV');
+			if(isset($this->poll)) $this->output('</poll');
 		
 		}
 		
