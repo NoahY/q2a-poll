@@ -72,22 +72,6 @@
 								unset($this->content['q_view']['form']['buttons']['answer']);
 							}
 							
-
-							if(!qa_opt('poll_comments')) {
-								unset($_POST['docommentq']);
-								unset($_POST['docommentaddq']);
-								unset($this->content['q_view']['form']['buttons']['comment']);
-								
-								if(isset($this->content['q_view']['c_list'])) {
-									foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
-										unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
-										unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
-										unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
-									}
-								}
-								unset($this->content['q_view']['c_form']);	
-							}	
-							
 							if(isset($this->content['a_list']['as'])) {
 								foreach($this->content['a_list']['as'] as $idx => $answer) {
 									
@@ -99,25 +83,38 @@
 										unset($this->content['a_list']['as'][$idx]['unselect_tags']);
 										unset($this->content['a_list']['as'][$idx]['form']['buttons']['edit']);
 									}
-
-									unset($_POST['docommenta_'.$idx]);
-									unset($_POST['docommentadda_'.$idx]);
-									unset($this->content['a_list']['as'][$idx]['c_form']);
-									unset($this->content['a_list']['as'][$idx]['form']['buttons']['comment']);
-									if(isset($answer['c_list'])) {
-										foreach($answer['c_list'] as $cdx => $comment) {
-											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['edit']);
-											unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
-										}
-									}
 								}
 
 							}
 
 							unset($this->content['q_view']['a_form']);					
-						}			
+						}
+						if(!qa_opt('poll_comments')) {
+							unset($_POST['docommentq']);
+							unset($_POST['docommentaddq']);
+							unset($this->content['q_view']['form']['buttons']['comment']);
+							
+							if(isset($this->content['q_view']['c_list'])) {
+								foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
+									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
+									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
+									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
+								}
+							}
+							unset($this->content['q_view']['c_form']);	
+						}										
 						if(isset($this->content['a_list']['as'])) {
 							foreach($this->content['a_list']['as'] as $idx => $answer) {
+								unset($_POST['docommenta_'.$idx]);
+								unset($_POST['docommentadda_'.$idx]);
+								unset($this->content['a_list']['as'][$idx]['c_form']);
+								unset($this->content['a_list']['as'][$idx]['form']['buttons']['comment']);
+								if(isset($answer['c_list'])) {
+									foreach($answer['c_list'] as $cdx => $comment) {
+										unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['edit']);
+										unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
+									}
+								}
 								unset($this->content['a_list']['as'][$idx]['what']);
 								unset($this->content['a_list']['as'][$idx]['when']);
 								unset($this->content['a_list']['as'][$idx]['who']);
@@ -131,6 +128,7 @@
 				}
 				if(isset($this->content['q_list'])) {
 					foreach($this->content['q_list']['qs'] as $idx => $question) {
+
 						if(isset($poll[$question['raw']['postid']])) {
 							$this->content['q_list']['qs'][$idx]['title'] .= ' '.qa_opt('poll_question_title');
 							if(@$this->content['q_list']['qs'][$idx]['what'] == qa_lang('main/answer_edited')) { 
