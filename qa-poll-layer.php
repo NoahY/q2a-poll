@@ -230,7 +230,7 @@
 			// add comments after answers
 			
 			if(isset($this->pollcommentlist)){
-				 $this->c_list($this->pollcommentlist, 'qa-q-view');
+				 $this->c_list($this->pollcommentlist, 'qa-a-item');
 			 }
 		 }
 	
