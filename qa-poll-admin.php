@@ -16,6 +16,21 @@
 		    return 'Answers:';
 		case 'poll_page_title':
 		    return 'Polls';
+		case 'poll_css':
+		    return '.poll .qa-a-list-item .qa-voting {
+	margin-bottom:0 !important;
+}
+.poll .qa-a-list-item {
+	padding-bottom:0 !important;
+	margin-bottom:0 !important;
+}
+.poll .qa-a-list-item .qa-vote-buttons {
+	padding-bottom:0 !important;
+}
+.poll .qa-a-list-item .qa-vote-one-button {
+	margin-top:0 !important;
+	margin-bottom:0 !important;
+}';
 		default:
 		    return null;				
 	    }
@@ -60,6 +75,7 @@
                 qa_opt('poll_already_voted',qa_post_text('poll_already_voted'));
                 qa_opt('poll_answers_text',qa_post_text('poll_answers_text'));
                 qa_opt('poll_page_title',qa_post_text('poll_page_title'));
+                qa_opt('poll_css',qa_post_text('poll_css'));
                 $ok = 'Settings Saved.';
             }
   
@@ -122,6 +138,14 @@
                 'label' => 'Poll page title',
                 'tags' => 'NAME="poll_page_title"',
                 'value' => qa_opt('poll_page_title'),
+            );
+
+            $fields[] = array(
+                'label' => 'Poll page stylesheet',
+                'tags' => 'NAME="poll_css"',
+                'value' => qa_opt('poll_css'),
+		'rows' => 20,
+		'type' => 'textarea',
             );
 
             return array(           

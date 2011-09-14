@@ -42,9 +42,12 @@
 						
 					// add post elements
 					
-						// title and message
+						// title
 
 						$this->content['title'] .= ' '.qa_opt('poll_question_title');
+						
+						// css class
+						
 						$this->content['main_form_tags'] .= ' class="poll"';
 
 					// move comments 
@@ -167,23 +170,8 @@
 	}
 </script>');
 				}
-				if($this->template == 'question') {
-					$this->output_raw('<style>
-	.poll .qa-a-list-item .qa-voting {
-		margin-bottom:0 !important;
-	}
-	.poll .qa-a-list-item {
-		padding-bottom:0 !important;
-		margin-bottom:0 !important;
-	}
-	.poll .qa-a-list-item .qa-vote-buttons {
-		padding-bottom:0 !important;
-	}
-	.poll .qa-a-list-item .qa-vote-one-button {
-		margin-top:0 !important;
-		margin-bottom:0 !important;
-	}
-	</style>');
+				if($this->template == 'question' && $this->poll) {
+					$this->output('<style>',qa_opt('poll_css'),'</style>');
 				}	
 			}	
 			qa_html_theme_base::head_custom();
