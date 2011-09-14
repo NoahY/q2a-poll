@@ -45,6 +45,7 @@
 						// title and message
 
 						$this->content['title'] .= ' '.qa_opt('poll_question_title');
+						$this->content['main_form_tags'] .= ' class="poll"';
 
 					// move comments 
 
@@ -168,17 +169,17 @@
 				}
 				if($this->template == 'question') {
 					$this->output_raw('<style>
-	poll .qa-a-list-item .qa-voting {
+	.poll .qa-a-list-item .qa-voting {
 		margin-bottom:0 !important;
 	}
-	poll .qa-a-list-item {
+	.poll .qa-a-list-item {
 		padding-bottom:0 !important;
 		margin-bottom:0 !important;
 	}
-	poll .qa-a-list-item .qa-vote-buttons {
+	.poll .qa-a-list-item .qa-vote-buttons {
 		padding-bottom:0 !important;
 	}
-	poll .qa-a-list-item .qa-vote-one-button {
+	.poll .qa-a-list-item .qa-vote-one-button {
 		margin-top:0 !important;
 		margin-bottom:0 !important;
 	}
@@ -186,15 +187,6 @@
 				}	
 			}	
 			qa_html_theme_base::head_custom();
-		}
-		
-		// add wrapper div to style polls differently
-
-		function main() {
-			if(isset($this->poll)) $this->output('<poll>');
-			qa_html_theme_base::main();
-			if(isset($this->poll)) $this->output('</poll');
-		
 		}
 		
 		function nav_list($navigation, $class, $level=null)
