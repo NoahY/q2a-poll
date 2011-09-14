@@ -166,21 +166,23 @@
 	}
 </script>');
 				}
-				$this->output_raw('<style>
-.qa-main-poll .qa-a-list-item .qa-voting {
-	margin-bottom:0;
-}
-.qa-main-poll .qa-a-list-item {
-	padding-bottom:0;
-}
-.qa-main-poll .qa-a-list-item .qa-vote-buttons {
-	padding-bottom:0;
-}
-.qa-main-poll .qa-a-list-item .qa-vote-one-button {
-	margin-top:0;
-	margin-bottom:0;
-}
-</script>');
+				if($this->template == 'question') {
+					$this->output_raw('<style>
+	.qa-main-poll .qa-a-list-item .qa-voting {
+		margin-bottom:0 !important;
+	}
+	.qa-main-poll .qa-a-list-item {
+		padding-bottom:0 !important;
+	}
+	.qa-main-poll .qa-a-list-item .qa-vote-buttons {
+		padding-bottom:0 !important;
+	}
+	.qa-main-poll .qa-a-list-item .qa-vote-one-button {
+		margin-top:0 !important;
+		margin-bottom:0 !important;
+	}
+	</script>');
+				}	
 			}	
 			qa_html_theme_base::head_custom();
 		}
