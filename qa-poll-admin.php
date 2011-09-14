@@ -52,6 +52,7 @@
 		    }		    
 		}
                 qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
+                qa_opt('poll_comments',(bool)qa_post_text('poll_comments'));
                 qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
                 qa_opt('poll_question_title',qa_post_text('poll_question_title'));
                 qa_opt('poll_checkbox_text',qa_post_text('poll_checkbox_text'));
@@ -70,6 +71,13 @@
                 'label' => 'Enable polls',
                 'tags' => 'NAME="poll_enable"',
                 'value' => qa_opt('poll_enable'),
+                'type' => 'checkbox',
+            );
+            
+            $fields[] = array(
+                'label' => 'Allow commenting on polls (comments are shown below all answers)',
+                'tags' => 'NAME="poll_comments"',
+                'value' => qa_opt('poll_comments'),
                 'type' => 'checkbox',
             );
 

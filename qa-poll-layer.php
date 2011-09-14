@@ -46,6 +46,13 @@
 						// title and message
 
 						$this->content['title'] .= ' '.qa_opt('poll_question_title');
+
+					// move comments 
+
+						if(isset($this->content['q_view']['c_list'])) {
+							$this->pollcommentlist = $this->content['q_view']['c_list'];
+							unset($this->content['q_view']['c_list']);
+						}
 						
 					// remove editing capabilities
 						
@@ -64,19 +71,22 @@
 								unset($this->content['q_view']['form']['buttons']['edit']);
 								unset($this->content['q_view']['form']['buttons']['answer']);
 							}
-
-							unset($_POST['docommentq']);
-							unset($_POST['docommentaddq']);
-							unset($this->content['q_view']['form']['buttons']['comment']);
 							
-							if(isset($this->content['q_view']['c_list'])) {
-								foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
-									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
-									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
-									unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
+
+							if(!qa_opt('poll_comments')) {
+								unset($_POST['docommentq']);
+								unset($_POST['docommentaddq']);
+								unset($this->content['q_view']['form']['buttons']['comment']);
+								
+								if(isset($this->content['q_view']['c_list'])) {
+									foreach($this->content['q_view']['c_list'] as $cdx => $comment) {
+										unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['edit']);
+										unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['answer']);
+										unset($this->content['q_view']['c_list'][$cdx]['form']['buttons']['comment']);							
+									}
 								}
-							}
-							unset($this->content['q_view']['c_form']);		
+								unset($this->content['q_view']['c_form']);	
+							}	
 							
 							if(isset($this->content['a_list']['as'])) {
 								foreach($this->content['a_list']['as'] as $idx => $answer) {
@@ -159,7 +169,6 @@
 		{
 			global $qa_request;
 			if($qa_request == 'polls' && $class == 'nav-sub') {
-				qa_error_log($class);
 				unset($navigation['recent']['selected']);
 				$navigation['polls']['selected'] = true;
 			}
@@ -189,6 +198,17 @@
 			}
 			else qa_html_theme_base::vote_buttons($post);
 		}
+
+		function a_list($a_list)
+		{
+			qa_html_theme_base::a_list($a_list);
+			
+			// add comments after answers
+			
+			if(isset($this->pollcommentlist)){
+				 $this->c_list($this->pollcommentlist, 'qa-q-view');
+			 }
+		 }
 	
 	// worker functions
 		
