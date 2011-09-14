@@ -3,7 +3,6 @@
 	class qa_html_theme_layer extends qa_html_theme_base {
 		
 		function doctype(){
-			//qa_error_log($this->content['navigation']);
 			if (qa_opt('poll_enable')) {
 				global $qa_request;
 				if($this->template == 'questions' || $qa_request == 'polls') {
@@ -104,7 +103,21 @@
 							unset($this->content['q_view']['c_form']);	
 						}										
 						if(isset($this->content['a_list']['as'])) {
+							
+							function cmp($a, $b)
+							{
+								$aid = (int)$a['raw']['postid'];
+								$bid = (int)$b['raw']['postid'];
+								if ($aid == $bid) {
+									return 0;
+								}
+								return ($aid < $bid) ? -1 : 1;
+							}
+
+							usort($this->content['a_list']['as'], "cmp");
+							
 							foreach($this->content['a_list']['as'] as $idx => $answer) {
+								//error_log($answer['raw']['postid']);
 								unset($_POST['docommenta_'.$idx]);
 								unset($_POST['docommentadda_'.$idx]);
 								unset($this->content['a_list']['as'][$idx]['c_form']);
@@ -115,6 +128,7 @@
 										unset($this->content['a_list']['as'][$idx]['c_list'][$cdx]['form']['buttons']['comment']);
 									}
 								}
+								unset($this->content['a_list']['as'][$idx]['avatar']);
 								unset($this->content['a_list']['as'][$idx]['what']);
 								unset($this->content['a_list']['as'][$idx]['when']);
 								unset($this->content['a_list']['as'][$idx]['who']);
