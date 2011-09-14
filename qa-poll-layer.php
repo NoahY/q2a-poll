@@ -155,7 +155,8 @@
 			qa_html_theme_base::doctype();
 		}
 		function head_custom() {
-			if(qa_opt('poll_enable') && $this->template == 'ask') {
+			if(qa_opt('poll_enable')) {
+				if($this->template == 'ask') {
 				$this->output_raw('<script>
 	var poll_answer_index = 2;
 	jQuery("document").ready(function(){jQuery("#is_poll").removeAttr("checked")});
@@ -164,6 +165,7 @@
 		poll_answer_index++;
 	}
 </script>');
+				}
 				$this->output_raw('<style>
 .qa-main-poll .qa-a-list-item .qa-voting {
 	margin-bottom:0;
@@ -179,7 +181,7 @@
 	margin-bottom:0;
 }
 </script>');
-			}
+			}	
 			qa_html_theme_base::head_custom();
 		}
 		
