@@ -141,7 +141,7 @@
             );
 
             $fields[] = array(
-                'label' => 'Poll page stylesheet',
+                'label' => 'Poll question stylesheet',
                 'tags' => 'NAME="poll_css"',
                 'value' => qa_opt('poll_css'),
 		'rows' => 20,

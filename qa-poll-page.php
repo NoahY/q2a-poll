@@ -36,9 +36,6 @@
 			require_once QA_INCLUDE_DIR.'qa-app-format.php';
 			require_once QA_INCLUDE_DIR.'qa-app-q-list.php';
 			
-			$sort=qa_get('sort');
-
-
 		//	Get list of questions, plus category information
 
 			$nonetitle=qa_lang_html('main/no_questions_found');
@@ -89,9 +86,6 @@
 				null // extra parameters for page links
 			);
 			
-			if (!$countslugs)
-				$qa_content['navigation']['sub']=qa_qs_sub_navigation($sort);
-
 			return $qa_content;
 		}
 		
