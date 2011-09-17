@@ -105,7 +105,8 @@
 								}
 							}
 							unset($this->content['q_view']['c_form']);	
-						}										
+						}									
+
 						if(isset($this->content['a_list']['as'])) {
 							
 							function cmp($a, $b)
