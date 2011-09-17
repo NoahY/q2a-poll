@@ -171,7 +171,7 @@
 	}
 </script>');
 				}
-				if($this->template == 'question' && $this->poll) {
+				if($this->template == 'question' && @$this->poll) {
 					$this->output('<style>',qa_opt('poll_css'),'</style>');
 				}	
 			}	
