@@ -11,7 +11,7 @@
 		case 'poll_vote_button':
 		    return 'vote';
 		case 'poll_voted_button':
-		    return 'voted';
+		    return 'unvote';
 		case 'poll_multiple_text':
 		    return 'Allow multiple votes';
 		case 'poll_already_voted':
@@ -67,6 +67,7 @@
     margin-top:10px;
 }
 .qa-poll-voted-button, .qa-poll-vote-button {
+    cursor:pointer;
     width:24px;
     height:24px;
     float:left;
@@ -78,7 +79,7 @@
 .qa-poll-vote-button {
     background-image:url(^button_vote.png);
 }
-.qa-poll-vote-button:hover {
+.qa-poll-vote-button:hover, .qa-poll-voted-button:hover {
     background-image:url(^button_voting.png);
 }';
 		default:
