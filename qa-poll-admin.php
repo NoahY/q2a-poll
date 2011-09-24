@@ -8,29 +8,30 @@
 		    return '[poll]';
 		case 'poll_checkbox_text':
 		    return 'Create poll';
+		case 'poll_vote_button':
+		    return 'vote';
+		case 'poll_voted_button':
+		    return 'voted';
 		case 'poll_multiple_text':
 		    return 'Allow multiple votes';
 		case 'poll_already_voted':
 		    return 'You have already voted once.';
 		case 'poll_answers_text':
-		    return 'Answers:';
+		    return 'Choices:';
 		case 'poll_page_title':
 		    return 'Polls';
+		case 'poll_max_width':
+		    return 500;
+		case 'poll_vote_width':
+		    return 10;
+		case 'poll_vote_height':
+		    return 10;
 		case 'poll_css':
-		    return '.poll .qa-a-list-item .qa-voting {
-	margin-bottom:0 !important;
+		    return '#qa-poll-choices {
 }
-.poll .qa-a-list-item {
-	padding-bottom:0 !important;
-	margin-bottom:0 !important;
+qa-poll-vote-block {
 }
-.poll .qa-a-list-item .qa-vote-buttons {
-	padding-bottom:0 !important;
-}
-.poll .qa-a-list-item .qa-vote-one-button {
-	margin-top:0 !important;
-	margin-bottom:0 !important;
-}';
+';
 		default:
 		    return null;				
 	    }
@@ -57,11 +58,23 @@
 			    'CREATE TABLE IF NOT EXISTS ^postmeta (
 			    meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			    post_id bigint(20) unsigned NOT NULL,
-			    meta_key varchar(255) DEFAULT NULL,
+			    meta_key varchar(255) DEFAULT \'\',
 			    meta_value longtext,
 			    PRIMARY KEY (meta_id),
 			    KEY post_id (post_id),
 			    KEY meta_key (meta_key)
+			    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
+			);			
+		    }		    
+		    $table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^polls'"),true);
+		    if(!$table_exists) {
+			qa_db_query_sub(
+			    'CREATE TABLE IF NOT EXISTS ^polls (
+			    id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			    parentid bigint(20) unsigned NOT NULL,
+			    votes longtext,
+			    content varchar(255) DEFAULT \'\',
+			    PRIMARY KEY (id)
 			    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
 			);			
 		    }		    
@@ -72,9 +85,14 @@
                 qa_opt('poll_question_title',qa_post_text('poll_question_title'));
                 qa_opt('poll_checkbox_text',qa_post_text('poll_checkbox_text'));
                 qa_opt('poll_multiple_text',qa_post_text('poll_multiple_text'));
+                qa_opt('poll_vote_button',qa_post_text('poll_vote_button'));
+                qa_opt('poll_voted_button',qa_post_text('poll_voted_button'));
                 qa_opt('poll_already_voted',qa_post_text('poll_already_voted'));
                 qa_opt('poll_answers_text',qa_post_text('poll_answers_text'));
                 qa_opt('poll_page_title',qa_post_text('poll_page_title'));
+                qa_opt('poll_max_width',(int)qa_post_text('poll_max_width'));
+                qa_opt('poll_vote_width',(int)qa_post_text('poll_vote_width'));
+                qa_opt('poll_vote_height',(int)qa_post_text('poll_vote_height'));
                 qa_opt('poll_css',qa_post_text('poll_css'));
                 $ok = 'Settings Saved.';
             }
@@ -98,7 +116,7 @@
             );
 
             $fields[] = array(
-                'label' => 'Update date of answer on vote',
+                'label' => 'Update date of question on vote',
                 'tags' => 'NAME="poll_update_on_vote"',
                 'value' => qa_opt('poll_update_on_vote'),
                 'type' => 'checkbox',
@@ -123,6 +141,18 @@
             );
 
             $fields[] = array(
+                'label' => 'Vote button text',
+                'tags' => 'NAME="poll_vote_button"',
+                'value' => qa_opt('poll_vote_button'),
+            );
+
+            $fields[] = array(
+                'label' => 'Voted button text',
+                'tags' => 'NAME="poll_voted_button"',
+                'value' => qa_opt('poll_voted_button'),
+            );
+
+            $fields[] = array(
                 'label' => 'Text to display when disallowing second vote',
                 'tags' => 'NAME="poll_already_voted"',
                 'value' => qa_opt('poll_already_voted'),
@@ -141,11 +171,33 @@
             );
 
             $fields[] = array(
+                'type' => 'number',
+                'label' => 'Maximum width of poll choice (px)',
+                'tags' => 'NAME="poll_max_width"',
+                'value' => qa_opt('poll_max_width'),
+            );
+
+            $fields[] = array(
+                'type' => 'number',
+                'label' => 'width of each poll vote (px)',
+                'tags' => 'NAME="poll_vote_width"',
+                'value' => qa_opt('poll_vote_width'),
+            );
+
+            $fields[] = array(
+                'type' => 'number',
+                'label' => 'height of each poll vote (px)',
+                'tags' => 'NAME="poll_vote_height"',
+                'value' => qa_opt('poll_vote_height'),
+            );
+
+            $fields[] = array(
                 'label' => 'Poll question stylesheet',
                 'tags' => 'NAME="poll_css"',
                 'value' => qa_opt('poll_css'),
 		'rows' => 20,
 		'type' => 'textarea',
+		'note' => '^ will be replaced by this plugin directory ('.QA_HTML_THEME_LAYER_URLTOROOT.')',
             );
 
             return array(           
