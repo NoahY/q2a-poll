@@ -45,10 +45,19 @@
     width:24px;
 }
 .qa-poll-choice {
-    margin-left:10px;
     clear:both;
-    margin-bottom:20px;
+    padding:20px 0 20px 10px;
+    border-bottom: 1px solid DeepSkyBlue;
 }
+#qa-poll-choices > div:last-child  {
+    border-bottom:none;
+    padding-bottom:0px;
+}
+#qa-poll-choices > div:first-child  {
+    border-top:none;
+    padding-top:0px;
+}
+
 .qa-poll-choice-title {
     line-height:24px;
     margin-left:10px;
