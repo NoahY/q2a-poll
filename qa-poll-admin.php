@@ -27,11 +27,51 @@
 		case 'poll_vote_height':
 		    return 10;
 		case 'poll_css':
-		    return '#qa-poll-choices {
+		    return '#qa-poll-div {
+    background-color: LightSkyBlue;
+    border: 2px solid DeepSkyBlue;
+    border-radius: 8px 8px 8px 8px;
+    font-size: 12px;
+    padding: 10px;
 }
-qa-poll-vote-block {
+#qa-poll-choices-title {
+    font-weight:bold;
+    margin-bottom:8px;
 }
-';
+.qa-poll-vote-block {
+    background-color:green;
+}
+.qa-poll-voted-button-container,.qa-poll-vote-button-container{
+    width:24px;
+}
+.qa-poll-choice {
+    margin-left:10px;
+    clear:both;
+    margin-bottom:20px;
+}
+.qa-poll-choice-title {
+    line-height:24px;
+    margin-left:10px;
+}
+.qa-poll-votes {
+    margin-left:34px; 
+    margin-top:10px;
+}
+.qa-poll-voted-button, .qa-poll-vote-button {
+    width:24px;
+    height:24px;
+    float:left;
+    clear:left;
+}
+.qa-poll-voted-button {
+    background-image:url(^button_voted.png);
+}
+.qa-poll-vote-button {
+    background-image:url(^button_vote.png);
+}
+.qa-poll-vote-button:hover {
+    background-image:url(^button_voting.png);
+}';
 		default:
 		    return null;				
 	    }

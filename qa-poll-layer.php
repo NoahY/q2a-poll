@@ -174,7 +174,7 @@
 			
 			if(empty($answers)) return '### no choices found for poll!';
 
-			$out = '<div id="qa-poll-choices-title">'.qa_opt('poll_answers_text').'</div>';
+			$out = '<div id="qa-poll-choices-title">'.qa_opt('poll_answers_text').'</div><div id="qa-poll-choices">';
 			
 			// check if voted
 			
@@ -190,14 +190,17 @@
 			}
 
 			foreach ($answers as $answer) {
-
-				$out .= '<div class="qa-poll-choice">'.@$answer['vote'].'<span class="qa-poll-choice-title">'.qa_html($answer['content']).'</span>';
+				
+				
+				if(!$answer['votes']) $votes = array();
+				else $votes = explode(',',$answer['votes']);
+				
+				$out .= '<div class="qa-poll-choice">'.@$answer['vote'].'<span class="qa-poll-choice-title">'.qa_html($answer['content']).'</span> ('.(count($votes)==1?qa_lang('main/1_vote'):str_replace('^',count($votes),qa_lang('main/x_votes'))).')';
 				
 				$out .= '<table class="qa-poll-votes" style="max-width:'.qa_opt('poll_max_width').'px;height:'.qa_opt('poll_vote_height').'px"><tr>';
 				
 				if($answer['votes']) {
 					
-					$votes = explode(',',$answer['votes']);
 					$c = 0;
 					while( ($c++) < count($votes)) {
 						$out .= '<td class="qa-poll-vote-block" title="'.(count($votes)==1?qa_lang('main/1_vote'):str_replace('^',count($votes),qa_lang('main/x_votes'))).'" style="width:'.qa_opt('poll_vote_width').'px;height:'.qa_opt('poll_vote_height').'px"></td>';
@@ -205,6 +208,8 @@
 				}
 				$out .= '</tr></table></div>';
 			}
+			$out .= '</div>';
+			
 			return $out;
 		}
 		
