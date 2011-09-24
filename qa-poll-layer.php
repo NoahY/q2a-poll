@@ -72,7 +72,7 @@
 		
 		function html() {
 			if(qa_post_text('ajax_poll_id')) {
-				$this->output_raw($this->getPollDiv((int)qa_post_text('ajax_poll_id'),(int)qa_post_text('ajax_poll_voter'),(int)qa_post_text('ajax_poll_vote')));
+				$this->output_raw($this->getPollDiv((int)qa_post_text('ajax_poll_id'),(int)qa_post_text('ajax_poll_voter'),qa_post_text('ajax_poll_vote')));
 				return;
 			}
 			qa_html_theme_base::html();
@@ -140,6 +140,7 @@
 			// do voting
 
 			if($vid) {
+				if($vid != 'cancel') $vid = (int)$vid;
 				foreach ($answers as $idx => $answer) {
 					$votes = explode(',',$answer['votes']);
 					
@@ -153,7 +154,7 @@
 							$answers[$idx]['votes'], $vid
 						);
 					}
-					else if(in_array($uid,$votes) && $this->poll != 2) {
+					else if(in_array($uid,$votes) && ($this->poll != 2 || $vid == 'cancel')) {
 						foreach($votes as $i => $vote) {
 							if($uid == $vote) {
 								unset($votes[$i]);
@@ -185,7 +186,7 @@
 				if(!in_array($uid,$votes))
 					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_opt('poll_vote_button').'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
 				else {
-					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_opt('poll_voted_button').'"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_opt('poll_voted_button').'" onclick="pollVote('.$qid.','.$uid.',\'cancel\')"></div>';
 				}
 			}
 
