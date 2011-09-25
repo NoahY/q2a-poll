@@ -247,7 +247,7 @@
                 'value' => qa_opt('poll_css'),
 		'rows' => 20,
 		'type' => 'textarea',
-		'note' => '^ will be replaced by this plugin directory ('.QA_HTML_THEME_LAYER_URLTOROOT.')',
+		'note' => '^ will be replaced by this plugin directory (QA_HTML_THEME_LAYER_URLTOROOT)',
             );
 
             return array(           
