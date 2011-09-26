@@ -4,6 +4,8 @@
 	function option_default($option) {
 		
 	    switch($option) {
+		case 'poll_comments':
+		    return '[poll]';
 		case 'poll_question_title':
 		    return '[poll]';
 		case 'poll_checkbox_text':
@@ -20,17 +22,10 @@
 		    return 'Choices:';
 		case 'poll_page_title':
 		    return 'Polls';
-		case 'poll_max_width':
-		    return 500;
-		case 'poll_vote_width':
-		    return 10;
-		case 'poll_vote_height':
-		    return 10;
 		case 'poll_css':
 		    return '#qa-poll-div {
-    background-color: LightSkyBlue;
-    border: 2px solid DeepSkyBlue;
-    border-radius: 8px 8px 8px 8px;
+    background-color: #D9E3EA;
+    border: 1px solid #658296;
     font-size: 12px;
     padding: 10px;
 }
@@ -38,40 +33,45 @@
     font-weight:bold;
     margin-bottom:8px;
 }
-.qa-poll-vote-block {
-    background-color:green;
-}
 .qa-poll-voted-button-container,.qa-poll-vote-button-container{
     width:24px;
 }
 .qa-poll-choice {
     clear:both;
-    padding:20px 0 20px 10px;
-    border-bottom: 1px solid DeepSkyBlue;
+    padding:5px 0 5px 5px;
 }
 #qa-poll-choices > div:last-child  {
-    border-bottom:none;
     padding-bottom:0px;
 }
 #qa-poll-choices > div:first-child  {
-    border-top:none;
     padding-top:0px;
 }
 
 .qa-poll-choice-title {
-    line-height:24px;
+    line-height:12px;
     margin-left:10px;
 }
 .qa-poll-votes {
-    margin-left:34px; 
-    margin-top:10px;
+    max-width:500px;
+    height:10px;
+    margin-left:22px; 
+    margin:5px 0 5px 22px;
+}
+.qa-poll-vote-block {
+    width:10px;
+    height:10px;
+    background-color:green;
+}
+.qa-poll-vote-block-empty {
+    width:10px;
+    height:10px;
 }
 .qa-poll-voted-button, .qa-poll-vote-button {
     cursor:pointer;
-    width:24px;
-    height:24px;
+    width:12px;
+    height:12px;
     float:left;
-    clear:left;
+    margin-top: 1px;
 }
 .qa-poll-voted-button {
     background-image:url(^button_voted.png);
@@ -130,7 +130,6 @@
 		    }		    
 		}
                 qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
-                qa_opt('poll_comments',(bool)qa_post_text('poll_comments'));
                 qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
                 qa_opt('poll_question_title',qa_post_text('poll_question_title'));
                 qa_opt('poll_checkbox_text',qa_post_text('poll_checkbox_text'));
@@ -140,12 +139,15 @@
                 qa_opt('poll_already_voted',qa_post_text('poll_already_voted'));
                 qa_opt('poll_answers_text',qa_post_text('poll_answers_text'));
                 qa_opt('poll_page_title',qa_post_text('poll_page_title'));
-                qa_opt('poll_max_width',(int)qa_post_text('poll_max_width'));
-                qa_opt('poll_vote_width',(int)qa_post_text('poll_vote_width'));
-                qa_opt('poll_vote_height',(int)qa_post_text('poll_vote_height'));
                 qa_opt('poll_css',qa_post_text('poll_css'));
                 $ok = 'Settings Saved.';
             }
+            else if (qa_clicked('poll_reset')) {
+		foreach($_POST as $i => $v) {
+		    $def = $this->option_default($i);
+		    if($def !== null) qa_opt($i,$def);
+		}
+	    }
   
         // Create the form for display
             
@@ -157,21 +159,15 @@
                 'value' => qa_opt('poll_enable'),
                 'type' => 'checkbox',
             );
-            
-            $fields[] = array(
-                'label' => 'Allow commenting on polls (comments are shown below all answers)',
-                'tags' => 'NAME="poll_comments"',
-                'value' => qa_opt('poll_comments'),
-                'type' => 'checkbox',
-            );
 
+/*
             $fields[] = array(
                 'label' => 'Update date of question on vote',
                 'tags' => 'NAME="poll_update_on_vote"',
                 'value' => qa_opt('poll_update_on_vote'),
                 'type' => 'checkbox',
             );
-
+*/
             $fields[] = array(
                 'label' => 'Text to add to poll title',
                 'tags' => 'NAME="poll_question_title"',
@@ -221,33 +217,12 @@
             );
 
             $fields[] = array(
-                'type' => 'number',
-                'label' => 'Maximum width of poll choice (px)',
-                'tags' => 'NAME="poll_max_width"',
-                'value' => qa_opt('poll_max_width'),
-            );
-
-            $fields[] = array(
-                'type' => 'number',
-                'label' => 'width of each poll vote (px)',
-                'tags' => 'NAME="poll_vote_width"',
-                'value' => qa_opt('poll_vote_width'),
-            );
-
-            $fields[] = array(
-                'type' => 'number',
-                'label' => 'height of each poll vote (px)',
-                'tags' => 'NAME="poll_vote_height"',
-                'value' => qa_opt('poll_vote_height'),
-            );
-
-            $fields[] = array(
                 'label' => 'Poll question stylesheet',
                 'tags' => 'NAME="poll_css"',
                 'value' => qa_opt('poll_css'),
 		'rows' => 20,
 		'type' => 'textarea',
-		'note' => '^ will be replaced by this plugin directory (QA_HTML_THEME_LAYER_URLTOROOT)',
+		'note' => '^ will be replaced by location of this plugin directory',
             );
 
             return array(           
@@ -257,9 +232,13 @@
              
                 'buttons' => array(
                     array(
-                        'label' => 'Save',
+                        'label' => qa_lang_html('main/save_button'),
                         'tags' => 'NAME="poll_save"',
-                    )
+                    ),
+                    array(
+                        'label' => qa_lang_html('admin/reset_options_button'),
+                        'tags' => 'NAME="poll_reset"',
+                    ),
                 ),
             );
         }
