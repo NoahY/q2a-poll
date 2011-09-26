@@ -14,7 +14,7 @@
 					  'url' => qa_path_html('polls'),
 					);
 				}
-				else if($this->template == 'ask') {
+				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q')) {
 					$this->content['form']['fields'][] = array(
 						'label' => qa_opt('poll_checkbox_text'),
 						'tags' => 'NAME="is_poll" ID="is_poll" onclick="jQuery(\'#qa-poll-ask-div\').toggle()"',
@@ -90,7 +90,7 @@
 	}
 </script>');
 				}
-				if($this->template == 'question' && @$this->poll) {
+				if($this->template == 'question' && @$this->poll && !qa_user_permit_error('permit_post_q')) {
 					$this->output('<style>',str_replace('^',QA_HTML_THEME_LAYER_URLTOROOT,qa_opt('poll_css')),'</style>');
 					$this->output_raw("<script>
 		function pollVote(qid,uid,vid) {
