@@ -51,7 +51,7 @@
 
 						// poll div
 						
-						$this->content['q_view']['content'].= '<div id="qa-poll-div">'.$this->getPollDiv($qid,qa_get_logged_in_userid()).'</div>';
+						$this->content['q_view']['content'] = @$this->content['q_view']['content'].'<div id="qa-poll-div">'.$this->getPollDiv($qid,qa_get_logged_in_userid()).'</div>';
 						
 						// css class
 						
