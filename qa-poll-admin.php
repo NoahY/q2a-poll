@@ -201,7 +201,7 @@
             );
 
             $fields[] = array(
-                'label' => 'Error to display when inputting less than two poll choices',
+                'label' => 'Error to display when submitting with less than two poll choices',
                 'tags' => 'NAME="poll_choice_count_error"',
                 'value' => qa_opt('poll_choice_count_error'),
             );
