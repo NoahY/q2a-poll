@@ -38,7 +38,8 @@
 							);
 
 							$c = 0;
-							while(qa_post_text('poll_answer_'.(++$c))) {
+							while(isset($_POST['poll_answer_'.(++$c)])) {
+								if(!qa_post_text('poll_answer_'.$c)) continue; // empty
 								qa_db_query_sub(
 									'INSERT INTO ^polls (parentid,content) VALUES (#,$)',
 									$params['postid'],qa_post_text('poll_answer_'.$c)

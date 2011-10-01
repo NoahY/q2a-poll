@@ -22,6 +22,8 @@
 		    return 'Choices:';
 		case 'poll_page_title':
 		    return 'Polls';
+		case 'poll_choice_count_error':
+		    return 'You must enter at least two choices for the poll.';
 		case 'poll_css':
 		    return '#qa-poll-div {
     background-color: #D9E3EA;
@@ -196,6 +198,12 @@
                 'label' => 'Voted button text',
                 'tags' => 'NAME="poll_voted_button"',
                 'value' => qa_opt('poll_voted_button'),
+            );
+
+            $fields[] = array(
+                'label' => 'Error to display when inputting less than two poll choices',
+                'tags' => 'NAME="poll_choice_count_error"',
+                'value' => qa_opt('poll_choice_count_error'),
             );
 
             $fields[] = array(

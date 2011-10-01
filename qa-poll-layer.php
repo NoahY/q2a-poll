@@ -3,6 +3,7 @@
 	class qa_html_theme_layer extends qa_html_theme_base {
 		
 		function doctype(){
+			//qa_error_log($this->content);
 			if(qa_post_text('poll_vote')) {
 				return;
 			}
@@ -15,13 +16,14 @@
 					);
 				}
 				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q')) {
+					$this->content['form']['tags'] .= ' onSubmit="pollSubmit(event)"';
 					$this->content['form']['fields'][] = array(
 						'label' => qa_opt('poll_checkbox_text'),
 						'tags' => 'NAME="is_poll" ID="is_poll" onclick="jQuery(\'#qa-poll-ask-div\').toggle()"',
 						'type' => 'checkbox',
 					);
 					$this->content['form']['fields'][] = array(
-						'note' => '<div id="qa-poll-ask-div" style="display:none"><p class="qa-form-tall-label"><input type="checkbox" name="poll_multiple">'.qa_opt('poll_multiple_text').'</p><p class="qa-form-tall-label">'.qa_opt('poll_answers_text').'</p><input type="input" class="qa-poll-answer-text" class="qa-poll-answer-text" name="poll_answer_1">&nbsp;<input type="button" class="qa-poll-answer-add" value="+" onclick="addPollAnswer(poll_answer_index)"></div>',
+						'note' => '<div id="qa-poll-ask-div" style="display:none"><p class="qa-form-tall-label"><input type="checkbox" name="poll_multiple">'.qa_opt('poll_multiple_text').'</p><p class="qa-form-tall-label">'.qa_opt('poll_answers_text').'</p><input type="input" class="qa-poll-answer-text" class="qa-poll-answer-text" name="poll_answer_1" id="poll_answer_1">&nbsp;<input type="button" class="qa-poll-answer-add" value="+" onclick="addPollAnswer(poll_answer_index)"></div>',
 						'type' => 'static',
 					);
 				}
@@ -85,32 +87,46 @@
 	var poll_answer_index = 2;
 	jQuery("document").ready(function(){jQuery("#is_poll").removeAttr("checked")});
 	function addPollAnswer(idx) {
-		jQuery("#qa-poll-ask-div").append(\'<br/><input type="input" class="qa-poll-answer-text" name="poll_answer_\'+idx+\'">&nbsp;<input type="button" class="qa-poll-answer-add" value="+" onclick="addPollAnswer(poll_answer_index)">\');
+		jQuery("#qa-poll-ask-div").append(\'<br/><input type="input" class="qa-poll-answer-text" name="poll_answer_\'+idx+\'" id="poll_answer_\'+idx+\'">&nbsp;<input type="button" class="qa-poll-answer-add" value="+" onclick="addPollAnswer(poll_answer_index)">\');
 		poll_answer_index++;
+	}
+	function pollSubmit(e) {
+		if(jQuery("#is_poll").attr("checked")) {
+			var idx = 0, count = 0;
+			while(jQuery("#poll_answer_"+(++idx)).length) {
+				if(jQuery("#poll_answer_"+idx).val().length) {
+					count++;
+				}
+				if (count > 1) return true;
+			}
+			e.preventDefault();
+			alert("'.qa_opt('poll_choice_count_error').'");
+			return false;
+		}
 	}
 </script>');
 				}
-				if($this->template == 'question' && @$this->poll && !qa_user_permit_error('permit_post_q')) {
+				else if($this->template == 'question' && @$this->poll && !qa_user_permit_error('permit_post_q')) {
 					$this->output('<style>',str_replace('^',QA_HTML_THEME_LAYER_URLTOROOT,qa_opt('poll_css')),'</style>');
 					$this->output_raw("<script>
-		function pollVote(qid,uid,vid) {
-			var dataString = 'ajax_poll_id='+qid+'&ajax_poll_voter='+uid+'&ajax_poll_vote='+vid;  
-			jQuery.ajax({  
-			  type: 'POST',  
-			  url: '".qa_self_html()."',  
-			  data: dataString,  
-			  success: function(data) {
-				if(/^[\\t\\n ]*###/.exec(data)) {
-					var error = data.replace(/^[\\t\\n ]*### */,'');
-					window.alert(error);
-				}
-				else {
-						jQuery('#qa-poll-div').html(data);
-				}
-			  }  
-			});
-		}
-	</script>");
+	function pollVote(qid,uid,vid) {
+		var dataString = 'ajax_poll_id='+qid+'&ajax_poll_voter='+uid+'&ajax_poll_vote='+vid;  
+		jQuery.ajax({  
+		  type: 'POST',  
+		  url: '".qa_self_html()."',  
+		  data: dataString,  
+		  success: function(data) {
+			if(/^[\\t\\n ]*###/.exec(data)) {
+				var error = data.replace(/^[\\t\\n ]*### */,'');
+				window.alert(error);
+			}
+			else {
+					jQuery('#qa-poll-div').html(data);
+			}
+		  }  
+		});
+	}
+</script>");
 				}	
 			}	
 			qa_html_theme_base::head_custom();
