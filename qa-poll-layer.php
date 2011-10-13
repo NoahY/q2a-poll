@@ -74,7 +74,7 @@
 		
 		function html() {
 			if(qa_post_text('ajax_poll_id')) {
-				$this->output_raw($this->getPollDiv((int)qa_post_text('ajax_poll_id'),(int)qa_post_text('ajax_poll_voter'),qa_post_text('ajax_poll_vote')));
+				$this->output_raw($this->getPollDiv((int)qa_post_text('ajax_poll_id'),(int)qa_post_text('ajax_poll_voter'),qa_post_text('ajax_poll_vote'),qa_post_text('ajax_poll_cancel')));
 				return;
 			}
 			qa_html_theme_base::html();
@@ -109,8 +109,8 @@
 				else if($this->template == 'question' && @$this->poll && !qa_user_permit_error('permit_post_q')) {
 					$this->output('<style>',str_replace('^',QA_HTML_THEME_LAYER_URLTOROOT,qa_opt('poll_css')),'</style>');
 					$this->output_raw("<script>
-	function pollVote(qid,uid,vid) {
-		var dataString = 'ajax_poll_id='+qid+'&ajax_poll_voter='+uid+'&ajax_poll_vote='+vid;  
+	function pollVote(qid,uid,vid,cancel) {
+		var dataString = 'ajax_poll_id='+qid+'&ajax_poll_voter='+uid+'&ajax_poll_vote='+vid+(cancel?'&ajax_poll_cancel='+cancel:'');  
 		jQuery.ajax({  
 		  type: 'POST',  
 		  url: '".qa_self_html()."',  
@@ -144,8 +144,17 @@
 		
 	// worker
 	
-		function getPollDiv($qid,$uid,$vid=null) {
-			
+		function getPollDiv($qid,$uid,$vid=null,$cancel=false) {
+			if(!$this->poll) {
+				$this->poll = qa_db_read_one_value(
+					qa_db_query_sub(
+						"SELECT meta_value FROM ^postmeta WHERE post_id=# AND meta_key='is_poll'",
+						$qid
+					),
+					true
+				);
+			}
+				
 			$answers = qa_db_read_all_assoc(
 				qa_db_query_sub(
 					'SELECT BINARY content as content, votes, id FROM ^polls WHERE parentid=#',
@@ -156,11 +165,11 @@
 			// do voting
 
 			if($vid) {
-				if($vid != 'cancel') $vid = (int)$vid;
+				$vid = (int)$vid;
 				foreach ($answers as $idx => $answer) {
 					$votes = explode(',',$answer['votes']);
 					
-					if($answer['id'] == $vid) {
+					if($answer['id'] == $vid && !$cancel) {
 						
 						if(in_array($uid,$votes)) return '### you\'ve already voted, cheater!';
 						
@@ -170,7 +179,7 @@
 							$answers[$idx]['votes'], $vid
 						);
 					}
-					else if(in_array($uid,$votes) && ($this->poll != 2 || $vid == 'cancel')) {
+					else if(in_array($uid,$votes) && ($this->poll != 2 || ($cancel && $answer['id'] == $vid))) {
 						foreach($votes as $i => $vote) {
 							if($uid == $vote) {
 								unset($votes[$i]);
@@ -200,9 +209,9 @@
 			foreach ($answers as $idx => $answer) {
 				$votes = explode(',',$answer['votes']);
 				if(!in_array($uid,$votes))
-					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_opt('poll_vote_button').'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_opt('poll_vote_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
 				else {
-					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_opt('poll_voted_button').'" onclick="pollVote('.$qid.','.$uid.',\'cancel\')"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_opt('poll_voted_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].',1)"></div>';
 				}
 			}
 

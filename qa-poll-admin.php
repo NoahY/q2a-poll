@@ -149,6 +149,7 @@
 		    $def = $this->option_default($i);
 		    if($def !== null) qa_opt($i,$def);
 		}
+		$ok = qa_lang('admin/options_reset');
 	    }
   
         // Create the form for display
