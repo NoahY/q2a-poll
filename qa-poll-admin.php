@@ -142,7 +142,7 @@
                 qa_opt('poll_answers_text',qa_post_text('poll_answers_text'));
                 qa_opt('poll_page_title',qa_post_text('poll_page_title'));
                 qa_opt('poll_css',qa_post_text('poll_css'));
-                $ok = 'Settings Saved.';
+		$ok = qa_lang('admin/options_saved');
             }
             else if (qa_clicked('poll_reset')) {
 		foreach($_POST as $i => $v) {

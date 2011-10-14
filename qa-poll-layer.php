@@ -9,11 +9,8 @@
 			}
 			if (qa_opt('poll_enable')) {
 				global $qa_request;
-				if($this->template == 'questions' || $qa_request == 'polls') {
-					$this->content['navigation']['sub']['polls'] = array(
-					  'label' => qa_opt('poll_page_title'),
-					  'url' => qa_path_html('polls'),
-					);
+				if($qa_request == 'polls') {
+					$this->content['navigation']['sub'] = array('special'=>1);
 				}
 				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q')) {
 					$this->content['form']['tags'] .= ' onSubmit="pollSubmit(event)"';
@@ -134,10 +131,18 @@
 		
 		function nav_list($navigation, $class, $level=null)
 		{
-			global $qa_request;
-			if($qa_request == 'polls' && $class == 'nav-sub') {
-				unset($navigation['recent']['selected']);
-				$navigation['polls']['selected'] = true;
+			if($class == 'nav-sub' && qa_opt('poll_enable')) {
+				$navigation['polls'] = array(
+					  'label' => qa_opt('poll_page_title'),
+					  'url' => qa_path_html('polls'),
+				);
+				if($this->request == 'polls') {
+					unset($navigation['special']);
+					$newnav = qa_qs_sub_navigation(null);
+					$navigation = array_merge($newnav, $navigation);
+					unset($navigation['recent']['selected']);
+					$navigation['polls']['selected'] = true;
+				}
 			}
 			qa_html_theme_base::nav_list($navigation, $class, $level=null);
 		}

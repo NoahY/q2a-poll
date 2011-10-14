@@ -52,7 +52,7 @@
 				),
 				
 				'arraykey' => 'postid',
-				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0 ORDER BY ^posts.created DESC',
+				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0',
 				'arguments' => array('is_poll'),
 			);			
 			$selectspec['columns']['content']='BINARY ^posts.content';
@@ -63,6 +63,31 @@
 			$selectspec['columns']['lastip']='INET_NTOA(^posts.lastip)';
 			$selectspec['columns'][]='^posts.parentid';
 			$selectspec['columns']['lastviewip']='INET_NTOA(^posts.lastviewip)';
+
+			$selectspec['columns'][]='^posts.userid';
+			$selectspec['columns'][]='^posts.cookieid';
+			$selectspec['columns']['createip']='INET_NTOA(^posts.createip)';
+			$selectspec['columns'][]='^userpoints.points';
+
+			if (!QA_FINAL_EXTERNAL_USERS) {
+				$selectspec['columns'][]='^users.flags';
+				$selectspec['columns'][]='^users.level';
+				$selectspec['columns']['email']='BINARY ^users.email';
+				$selectspec['columns']['handle']='CONVERT(^users.handle USING BINARY)'; // because of MySQL bug #29205
+				$selectspec['columns'][]='^users.avatarblobid';
+				$selectspec['columns'][]='^users.avatarwidth';
+				$selectspec['columns'][]='^users.avatarheight';
+				$selectspec['source'].=' LEFT JOIN ^users ON ^posts.userid=^users.userid';
+				
+				if ($full) {
+					$selectspec['columns']['lasthandle']='CONVERT(lastusers.handle USING BINARY)'; // because of MySQL bug #29205
+					$selectspec['source'].=' LEFT JOIN ^users AS lastusers ON ^posts.lastuserid=lastusers.userid';
+				}
+			}
+			
+			$selectspec['source'].=' LEFT JOIN ^userpoints ON ^posts.userid=^userpoints.userid';
+			
+			$selectspec['source'].=' ORDER BY ^posts.created DESC';
 			
 			$questions = qa_db_select_with_pending($selectspec);
 			
