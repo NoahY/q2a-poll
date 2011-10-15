@@ -131,7 +131,7 @@
 		
 		function nav_list($navigation, $class, $level=null)
 		{
-			if($class == 'nav-sub' && qa_opt('poll_enable')) {
+			if($class == 'nav-sub' && in_array($this->template, array('plugin','questions')) && qa_opt('poll_enable')) {
 				$navigation['polls'] = array(
 					  'label' => qa_opt('poll_page_title'),
 					  'url' => qa_path_html('polls'),
@@ -144,7 +144,7 @@
 					$navigation['polls']['selected'] = true;
 				}
 			}
-			qa_html_theme_base::nav_list($navigation, $class, $level=null);
+			if(count($navigation) > 1 || $class != 'nav-sub') qa_html_theme_base::nav_list($navigation, $class, $level=null);
 		}
 		
 	// worker
