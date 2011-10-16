@@ -212,6 +212,12 @@
 			$allow = true;
 			
 			foreach ($answers as $idx => $answer) {
+				
+				if(!$uid) {
+					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_opt('poll_disabled_button')).'"></div>';
+					continue;
+				}
+				
 				$votes = explode(',',$answer['votes']);
 				if(!in_array($uid,$votes))
 					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_opt('poll_vote_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';

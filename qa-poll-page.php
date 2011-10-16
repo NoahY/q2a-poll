@@ -79,10 +79,8 @@
 				$selectspec['columns'][]='^users.avatarheight';
 				$selectspec['source'].=' LEFT JOIN ^users ON ^posts.userid=^users.userid';
 				
-				if ($full) {
-					$selectspec['columns']['lasthandle']='CONVERT(lastusers.handle USING BINARY)'; // because of MySQL bug #29205
-					$selectspec['source'].=' LEFT JOIN ^users AS lastusers ON ^posts.lastuserid=lastusers.userid';
-				}
+				$selectspec['columns']['lasthandle']='CONVERT(lastusers.handle USING BINARY)'; // because of MySQL bug #29205
+				$selectspec['source'].=' LEFT JOIN ^users AS lastusers ON ^posts.lastuserid=lastusers.userid';
 			}
 			
 			$selectspec['source'].=' LEFT JOIN ^userpoints ON ^posts.userid=^userpoints.userid';

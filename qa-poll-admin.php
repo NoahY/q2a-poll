@@ -14,6 +14,8 @@
 		    return 'vote';
 		case 'poll_voted_button':
 		    return 'unvote';
+		case 'poll_disabled_button':
+		    return 'log in to vote';
 		case 'poll_multiple_text':
 		    return 'Allow multiple votes';
 		case 'poll_already_voted':
@@ -34,9 +36,6 @@
 #qa-poll-choices-title {
     font-weight:bold;
     margin-bottom:8px;
-}
-.qa-poll-voted-button-container,.qa-poll-vote-button-container{
-    width:24px;
 }
 .qa-poll-choice {
     clear:both;
@@ -74,6 +73,13 @@
     height:12px;
     float:left;
     margin-top: 1px;
+}
+.qa-poll-disabled-button {
+    width:12px;
+    height:12px;
+    float:left;
+    margin-top: 1px;
+    background-image:url(^button_vote.png);
 }
 .qa-poll-voted-button {
     background-image:url(^button_voted.png);
@@ -199,6 +205,12 @@
                 'label' => 'Voted button text',
                 'tags' => 'NAME="poll_voted_button"',
                 'value' => qa_opt('poll_voted_button'),
+            );
+
+            $fields[] = array(
+                'label' => 'Disabled button text',
+                'tags' => 'NAME="poll_disabled_button"',
+                'value' => qa_opt('poll_disabled_button'),
             );
 
             $fields[] = array(
