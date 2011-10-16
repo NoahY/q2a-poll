@@ -169,7 +169,7 @@
 
 			// do voting
 
-			if($vid) {
+			if($vid && $uid) {
 				$vid = (int)$vid;
 				foreach ($answers as $idx => $answer) {
 					$votes = explode(',',$answer['votes']);
