@@ -4,6 +4,8 @@
 	function option_default($option) {
 		
 	    switch($option) {
+		case 'poll_enable_subnav':
+		    return true;
 		case 'poll_comments':
 		    return '[poll]';
 		case 'poll_question_title':
@@ -138,6 +140,7 @@
 		    }		    
 		}
                 qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
+                qa_opt('poll_enable_subnav',(bool)qa_post_text('poll_enable_subnav'));
                 qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
                 qa_opt('poll_question_title',qa_post_text('poll_question_title'));
                 qa_opt('poll_checkbox_text',qa_post_text('poll_checkbox_text'));
@@ -235,6 +238,13 @@
                 'label' => 'Poll page title',
                 'tags' => 'NAME="poll_page_title"',
                 'value' => qa_opt('poll_page_title'),
+            );
+
+            $fields[] = array(
+                'label' => 'Show poll link in questions sub-nav',
+                'tags' => 'NAME="poll_enable_subnav"',
+                'value' => qa_opt('poll_enable_subnav'),
+                'type' => 'checkbox',
             );
 
             $fields[] = array(

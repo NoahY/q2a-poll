@@ -12,7 +12,7 @@
 				if($qa_request == 'polls') {
 					$this->content['navigation']['sub'] = array('special'=>1);
 				}
-				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q')) {
+				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q') && !qa_opt('site_maintenance')) {
 					$this->content['form']['tags'] .= ' onSubmit="pollSubmit(event)"';
 					$this->content['form']['fields'][] = array(
 						'label' => qa_opt('poll_checkbox_text'),
@@ -131,7 +131,7 @@
 		
 		function nav_list($navigation, $class, $level=null)
 		{
-			if($class == 'nav-sub' && in_array($this->template, array('plugin','questions')) && qa_opt('poll_enable')) {
+			if($class == 'nav-sub' && in_array($this->template, array('plugin','questions')) && qa_opt('poll_enable') && qa_opt('poll_enable_subnav')) {
 				$navigation['polls'] = array(
 					  'label' => qa_opt('poll_page_title'),
 					  'url' => qa_path_html('polls'),
