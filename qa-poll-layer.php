@@ -138,7 +138,7 @@
 				);
 				if($this->request == 'polls') {
 					unset($navigation['special']);
-					$newnav = qa_qs_sub_navigation(null);
+					$newnav = qa_qs_sub_navigation(null,null);
 					$navigation = array_merge($newnav, $navigation);
 					unset($navigation['recent']['selected']);
 					$navigation['polls']['selected'] = true;

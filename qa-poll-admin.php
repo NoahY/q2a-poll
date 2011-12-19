@@ -111,34 +111,26 @@
             $ok = null;
             
             if (qa_clicked('poll_save')) {
-		if((bool)qa_post_text('poll_enable') && !qa_opt('poll_enable')) {
-		    $table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^postmeta'"),true);
-		    if(!$table_exists) {
-			qa_db_query_sub(
-			    'CREATE TABLE IF NOT EXISTS ^postmeta (
-			    meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			    post_id bigint(20) unsigned NOT NULL,
-			    meta_key varchar(255) DEFAULT \'\',
-			    meta_value longtext,
-			    PRIMARY KEY (meta_id),
-			    KEY post_id (post_id),
-			    KEY meta_key (meta_key)
-			    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
-			);			
-		    }		    
-		    $table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^polls'"),true);
-		    if(!$table_exists) {
-			qa_db_query_sub(
-			    'CREATE TABLE IF NOT EXISTS ^polls (
-			    id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			    parentid bigint(20) unsigned NOT NULL,
-			    votes longtext,
-			    content varchar(255) DEFAULT \'\',
-			    PRIMARY KEY (id)
-			    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
-			);			
-		    }		    
-		}
+		qa_db_query_sub(
+		    'CREATE TABLE IF NOT EXISTS ^postmeta (
+		    meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+		    post_id bigint(20) unsigned NOT NULL,
+		    meta_key varchar(255) DEFAULT \'\',
+		    meta_value longtext,
+		    PRIMARY KEY (meta_id),
+		    KEY post_id (post_id),
+		    KEY meta_key (meta_key)
+		    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
+		);			
+		qa_db_query_sub(
+		    'CREATE TABLE IF NOT EXISTS ^polls (
+		    id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+		    parentid bigint(20) unsigned NOT NULL,
+		    votes longtext,
+		    content varchar(255) DEFAULT \'\',
+		    PRIMARY KEY (id)
+		    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
+		);			
                 qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
                 qa_opt('poll_enable_subnav',(bool)qa_post_text('poll_enable_subnav'));
                 qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
