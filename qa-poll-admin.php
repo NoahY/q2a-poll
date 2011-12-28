@@ -4,6 +4,10 @@
 	function option_default($option) {
 		
 	    switch($option) {
+		case 'permit_post_poll':
+		    return QA_PERMIT_USERS;
+		case 'permit_vote_poll':
+		    return QA_PERMIT_USERS;
 		case 'poll_enable_subnav':
 		    return true;
 		case 'poll_comments':

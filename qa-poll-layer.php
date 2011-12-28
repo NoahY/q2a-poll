@@ -3,16 +3,52 @@
 	class qa_html_theme_layer extends qa_html_theme_base {
 		
 		function doctype(){
+			qa_html_theme_base::doctype();
 			//qa_error_log($this->content);
 			if(qa_post_text('poll_vote')) {
 				return;
 			}
+
+			if($this->request == 'admin/permissions' && function_exists('qa_register_plugin_phrases')) {
+				$permits[] = 'permit_vote_poll';
+				$permits[] = 'permit_post_poll';
+				foreach($permits as $optionname) {
+					$value = qa_opt($optionname);
+					$optionfield=array(
+						'id' => $optionname,
+						'label' => qa_lang_html('polls/'.$optionname).':',
+						'tags' => 'NAME="option_'.$optionname.'" ID="option_'.$optionname.'"',
+						'error' => qa_html(@$errors[$optionname]),
+					);					
+					$widest=QA_PERMIT_USERS;
+					$narrowest=QA_PERMIT_ADMINS;
+					
+					$permitoptions=qa_admin_permit_options($widest, $narrowest, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
+					
+					if (count($permitoptions)>1)
+						qa_optionfield_make_select($optionfield, $permitoptions, $value,
+							($value==QA_PERMIT_CONFIRMED) ? QA_PERMIT_USERS : min(array_keys($permitoptions)));
+					$this->content['form']['fields'][$optionname]=$optionfield;
+
+					$this->content['form']['fields'][$optionname.'_points']= array(
+						'id' => $optionname.'_points',
+						'tags' => 'NAME="option_'.$optionname.'_points" ID="option_'.$optionname.'_points"',
+						'type'=>'number',
+						'value'=>qa_opt($optionname.'_points'),
+						'prefix'=>qa_lang_html('admin/users_must_have').'&nbsp;',
+						'note'=>qa_lang_html('admin/points')
+					);
+					$checkboxtodisplay[$permitoption.'_points']='(option_'.$permitoption.'=='.qa_js(QA_PERMIT_POINTS).') ||(option_'.$permitoption.'=='.qa_js(QA_PERMIT_POINTS_CONFIRMED).')';
+				}
+				qa_set_display_rules(&$this->content, $checkboxtodisplay);
+			}
+
 			if (qa_opt('poll_enable')) {
 				global $qa_request;
 				if($qa_request == 'polls') {
 					$this->content['navigation']['sub'] = array('special'=>1);
 				}
-				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q') && !qa_opt('site_maintenance')) {
+				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q') && !qa_opt('site_maintenance') && qa_permit_check('permit_post_poll')) {
 					$this->content['form']['tags'] .= ' onSubmit="pollSubmit(event)"';
 					$this->content['form']['fields'][] = array(
 						'label' => qa_opt('poll_checkbox_text'),
@@ -66,7 +102,6 @@
 					}					
 				}
 			}
-			qa_html_theme_base::doctype();
 		}
 		
 		function html() {
@@ -105,24 +140,25 @@
 				}
 				else if($this->template == 'question' && @$this->poll && !qa_user_permit_error('permit_post_q')) {
 					$this->output('<style>',str_replace('^',QA_HTML_THEME_LAYER_URLTOROOT,qa_opt('poll_css')),'</style>');
-					$this->output_raw("<script>
-	function pollVote(qid,uid,vid,cancel) {
-		var dataString = 'ajax_poll_id='+qid+'&ajax_poll_voter='+uid+'&ajax_poll_vote='+vid+(cancel?'&ajax_poll_cancel='+cancel:'');  
-		jQuery.ajax({  
-		  type: 'POST',  
-		  url: '".qa_self_html()."',  
-		  data: dataString,  
-		  success: function(data) {
-			if(/^[\\t\\n ]*###/.exec(data)) {
-				var error = data.replace(/^[\\t\\n ]*### */,'');
-				window.alert(error);
-			}
-			else {
-					jQuery('#qa-poll-div').html(data);
-			}
-		  }  
-		});
-	}
+					if(qa_permit_check('permit_vote_poll'))
+						$this->output_raw("<script>
+function pollVote(qid,uid,vid,cancel) {
+	var dataString = 'ajax_poll_id='+qid+'&ajax_poll_voter='+uid+'&ajax_poll_vote='+vid+(cancel?'&ajax_poll_cancel='+cancel:'');  
+	jQuery.ajax({  
+	  type: 'POST',  
+	  url: '".qa_self_html()."',  
+	  data: dataString,  
+	  success: function(data) {
+		if(/^[\\t\\n ]*###/.exec(data)) {
+			var error = data.replace(/^[\\t\\n ]*### */,'');
+			window.alert(error);
+		}
+		else {
+				jQuery('#qa-poll-div').html(data);
+		}
+	  }  
+	});
+}
 </script>");
 				}	
 			}	
@@ -169,7 +205,7 @@
 
 			// do voting
 
-			if($vid && $uid) {
+			if($vid && $uid && qa_permit_check('permit_vote_poll')) {
 				$vid = (int)$vid;
 				foreach ($answers as $idx => $answer) {
 					$votes = explode(',',$answer['votes']);
@@ -213,7 +249,7 @@
 			
 			foreach ($answers as $idx => $answer) {
 				
-				if(!$uid) {
+				if(!$uid || !qa_permit_check('permit_vote_poll')) {
 					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_opt('poll_disabled_button')).'"></div>';
 					continue;
 				}

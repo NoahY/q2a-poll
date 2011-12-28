@@ -6,8 +6,6 @@
 				switch ($event) {
 					case 'q_post':
 						if(qa_post_text('is_poll')) {
-							$table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^postmeta'"),true);
-							if(!$table_exists) {
 							qa_db_query_sub(
 								'CREATE TABLE IF NOT EXISTS ^postmeta (
 								meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -19,9 +17,6 @@
 								KEY meta_key (meta_key)
 								) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
 							);			
-							}		    
-							$table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^polls'"),true);
-							if(!$table_exists) {
 							qa_db_query_sub(
 								'CREATE TABLE IF NOT EXISTS ^polls (
 								id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -31,7 +26,6 @@
 								PRIMARY KEY (id)
 								) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
 							);			
-							}	
 							qa_db_query_sub(
 								'INSERT INTO ^postmeta (post_id,meta_key,meta_value) VALUES (#,$,$)',
 								$params['postid'],'is_poll',(qa_post_text('poll_multiple')?'2':'1')
