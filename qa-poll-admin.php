@@ -21,7 +21,7 @@
 		case 'poll_voted_button':
 		    return 'unvote';
 		case 'poll_disabled_button':
-		    return 'log in to vote';
+		    return 'you are not allowed to vote';
 		case 'poll_multiple_text':
 		    return 'Allow multiple votes';
 		case 'poll_already_voted':
