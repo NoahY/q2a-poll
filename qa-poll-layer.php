@@ -90,8 +90,7 @@
 						
 						// css class
 						
-						if(isset($this->content['q_view']['main_form_tags']))
-							$this->content['q_view']['main_form_tags'] .= ' class="qa-poll"';
+						$this->content['q_view']['main_form_tags'] = @$this->content['q_view']['main_form_tags'].' class="qa-poll"';
 					}
 				}
 				if(isset($this->content['q_list'])) {
