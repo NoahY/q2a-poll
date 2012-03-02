@@ -55,9 +55,10 @@
 				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0',
 				'arguments' => array('is_poll'),
 			);			
-			$selectspec['columns']['content']='BINARY ^posts.content';
-			$selectspec['columns']['notify']='BINARY ^posts.notify';
+			$selectspec['columns']['content']='^posts.content';
+			$selectspec['columns']['notify']='^posts.notify';
 			$selectspec['columns']['updated']='UNIX_TIMESTAMP(^posts.updated)';
+			$selectspec['columns']['updatetype']='^posts.updatetype';
 			$selectspec['columns'][]='^posts.format';
 			$selectspec['columns'][]='^posts.lastuserid';
 			$selectspec['columns']['lastip']='INET_NTOA(^posts.lastip)';
