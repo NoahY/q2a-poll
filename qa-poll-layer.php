@@ -51,12 +51,12 @@
 				else if($this->template == 'ask' && !qa_user_permit_error('permit_post_q') && !qa_opt('site_maintenance') && qa_permit_check('permit_post_poll')) {
 					$this->content['form']['tags'] .= ' onSubmit="pollSubmit(event)"';
 					$this->content['form']['fields'][] = array(
-						'label' => qa_opt('poll_checkbox_text'),
+						'label' => qa_lang('polls/checkbox_text'),
 						'tags' => 'NAME="is_poll" ID="is_poll" onclick="jQuery(\'#qa-poll-ask-div\').toggle()"',
 						'type' => 'checkbox',
 					);
 					$this->content['form']['fields'][] = array(
-						'note' => '<div id="qa-poll-ask-div" style="display:none"><p class="qa-form-tall-label"><input type="checkbox" name="poll_multiple">'.qa_opt('poll_multiple_text').'</p><p class="qa-form-tall-label">'.qa_opt('poll_answers_text').'</p><input type="input" class="qa-poll-answer-text" class="qa-poll-answer-text" name="poll_answer_1" id="poll_answer_1">&nbsp;<input type="button" class="qa-poll-answer-add" value="+" onclick="addPollAnswer(poll_answer_index)"></div>',
+						'note' => '<div id="qa-poll-ask-div" style="display:none"><p class="qa-form-tall-label"><input type="checkbox" name="poll_multiple">'.qa_lang('polls/multiple_text').'</p><p class="qa-form-tall-label">'.qa_lang('polls/answers_text').'</p><input type="input" class="qa-poll-answer-text" class="qa-poll-answer-text" name="poll_answer_1" id="poll_answer_1">&nbsp;<input type="button" class="qa-poll-answer-add" value="+" onclick="addPollAnswer(poll_answer_index)"></div>',
 						'type' => 'static',
 					);
 				}
@@ -82,7 +82,7 @@
 					
 						// title
 
-						$this->content['title'] .= ' '.qa_opt('poll_question_title');
+						$this->content['title'] .= ' '.qa_lang('polls/question_title');
 
 						// poll div
 						
@@ -97,7 +97,7 @@
 					foreach($this->content['q_list']['qs'] as $idx => $question) {
 
 						if(isset($poll[$question['raw']['postid']])) {
-							$this->content['q_list']['qs'][$idx]['title'] .= ' '.qa_opt('poll_question_title');
+							$this->content['q_list']['qs'][$idx]['title'] .= ' '.qa_lang('polls/question_title');
 						}
 					}					
 				}
@@ -132,7 +132,7 @@
 				if (count > 1) return true;
 			}
 			e.preventDefault();
-			alert("'.qa_opt('poll_choice_count_error').'");
+			alert("'.qa_lang('polls/choice_count_error').'");
 			return false;
 		}
 	}
@@ -169,7 +169,7 @@ function pollVote(qid,uid,vid,cancel) {
 		{
 			if($class == 'nav-sub' && in_array($this->template, array('plugin','questions')) && qa_opt('poll_enable') && qa_opt('poll_enable_subnav')) {
 				$navigation['polls'] = array(
-					  'label' => qa_opt('poll_page_title'),
+					  'label' => qa_lang('polls/page_title'),
 					  'url' => qa_path_html('polls'),
 				);
 				if($this->request == 'polls') {
@@ -241,7 +241,7 @@ function pollVote(qid,uid,vid,cancel) {
 			
 			if(empty($answers)) return '### no choices found for poll!';
 
-			$out = '<div id="qa-poll-choices-title">'.qa_opt('poll_answers_text').'</div><div id="qa-poll-choices">';
+			$out = '<div id="qa-poll-choices-title">'.qa_lang('polls/answers_text').'</div><div id="qa-poll-choices">';
 			
 			// check if voted
 			
@@ -250,15 +250,15 @@ function pollVote(qid,uid,vid,cancel) {
 			foreach ($answers as $idx => $answer) {
 				
 				if(!$uid || !qa_permit_check('permit_vote_poll')) {
-					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_opt('poll_disabled_button')).'"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_lang('polls/disabled_button')).'"></div>';
 					continue;
 				}
 				
 				$votes = explode(',',$answer['votes']);
 				if(!in_array($uid,$votes))
-					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_opt('poll_vote_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_lang('polls/vote_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
 				else {
-					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_opt('poll_voted_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].',1)"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_lang('polls/voted_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].',1)"></div>';
 				}
 			}
 

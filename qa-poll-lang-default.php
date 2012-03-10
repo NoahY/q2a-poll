@@ -27,8 +27,19 @@
 	return array(
 		'permit_post_poll' => 'Create polls',
 		'permit_vote_poll' => 'Vote on polls',
+
+		'question_title' => '[poll]',
+		'comments' => '[poll]',
+		'checkbox_text' => 'Create poll',
+		'multiple_text' => 'Allow multiple votes',
+		'vote_button' => 'vote',
+		'voted_button' => 'unvote',
+		'already_voted' => 'You have already voted once.',
+		'already_voted' => 'you are not allowed to vote',
+		'answers_text' => 'Choices:',
+		'page_title' => 'Polls',
+		'choice_count_error' => 'You must enter at least two choices for the poll.',
 	);
-	
 
 /*
 	Omit PHP closing tag to help avoid accidental output
