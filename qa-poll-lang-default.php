@@ -35,7 +35,7 @@
 		'vote_button' => 'vote',
 		'voted_button' => 'unvote',
 		'already_voted' => 'You have already voted once.',
-		'already_voted' => 'you are not allowed to vote',
+		'disabled_button' => 'you are not allowed to vote',
 		'answers_text' => 'Choices:',
 		'page_title' => 'Polls',
 		'choice_count_error' => 'You must enter at least two choices for the poll.',
