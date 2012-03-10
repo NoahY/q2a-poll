@@ -15,7 +15,7 @@
 		{	
 			return array(
 				array(
-					'title' => qa_opt('poll_page_title'),
+					'title' => qa_lang('polls/page_title'),
 					'request' => 'polls',
 					'nav' => 'M', // 'M'=main, 'F'=footer, 'B'=before main, 'O'=opposite main, null=none
 				),
@@ -99,7 +99,7 @@
 				qa_opt('page_size_qs'), // questions per page
 				$qa_start, // start offset
 				count($questions), // total count
-				qa_opt('poll_page_title'), // title if some questions
+				qa_lang('polls/page_title'), // title if some questions
 				$nonetitle, // title if no questions
 				null, // categories for navigation
 				null, // selected category id

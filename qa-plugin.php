@@ -5,12 +5,12 @@
         Plugin URI: https://github.com/NoahY/q2a-poll
         Plugin Update Check URI: https://github.com/NoahY/q2a-poll/raw/master/qa-plugin.php
         Plugin Description: Ask poll questions
-        Plugin Version: 1.2
+        Plugin Version: 1.3
         Plugin Date: 2011-09-05
         Plugin Author: NoahY
         Plugin Author URI:                              
         Plugin License: GPLv2                           
-        Plugin Minimum Question2Answer Version: 1.4
+        Plugin Minimum Question2Answer Version: 1.5
 */                      
                         
                         

@@ -17,7 +17,7 @@ Features
 - answer updates when voted on (optional)
 - add a Polls page (optional)
 - adds text to poll question titles
-- all text fully customizable
+- all text fully customizable via language files
 - all css fully customizable
 - Buddypress integration if `Buddypress plugin`_ is enabled
 
