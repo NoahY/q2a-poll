@@ -52,8 +52,8 @@
 				),
 				
 				'arraykey' => 'postid',
-				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0',
-				'arguments' => array('is_poll'),
+				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0 AND ^posts.type=$',
+				'arguments' => array('is_poll','Q'),
 			);			
 			$selectspec['columns']['content']='^posts.content';
 			$selectspec['columns']['notify']='^posts.notify';
