@@ -9,7 +9,7 @@
 				return;
 			}
 
-			if($this->request == 'admin/permissions' && function_exists('qa_register_plugin_phrases')) {
+			if($this->request == 'admin/permissions' && function_exists('qa_register_plugin_phrases') && qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
 				$permits[] = 'permit_vote_poll';
 				$permits[] = 'permit_post_poll';
 				foreach($permits as $optionname) {
