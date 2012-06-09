@@ -6,7 +6,20 @@
 		$permits[] = 'permit_vote_poll';
 		return $permits;
 	}
-						
+	function qa_get_request_content() {
+		$qa_content = qa_get_request_content_base();
+		
+		// permissions
+		
+		if(isset($qa_content['form_profile']['fields']['permits'])) {			
+			
+				$ov = $qa_content['form_profile']['fields']['permits']['value'];
+				$ov = str_replace('[profile/permit_post_poll]',qa_lang('polls/permit_post_poll'),$ov);
+				$ov = str_replace('[profile/permit_vote_poll]',qa_lang('polls/permit_vote_poll'),$ov);
+				$qa_content['form_profile']['fields']['permits']['value'] = $ov;
+		}
+		return $qa_content;
+	}						
 /*							  
 		Omit PHP closing tag to help avoid accidental output
 */							  
