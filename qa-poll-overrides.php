@@ -4,6 +4,8 @@
 		$permits = qa_get_permit_options_base();
 		$permits[] = 'permit_post_poll';
 		$permits[] = 'permit_vote_poll';
+		$permits[] = 'permit_close_poll';
+		$permits[] = 'permit_delete_poll';
 		return $permits;
 	}
 	function qa_get_request_content() {

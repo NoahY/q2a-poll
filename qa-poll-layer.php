@@ -12,6 +12,8 @@
 			if($this->request == 'admin/permissions' && function_exists('qa_register_plugin_phrases') && qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
 				$permits[] = 'permit_vote_poll';
 				$permits[] = 'permit_post_poll';
+				$permits[] = 'permit_close_poll';
+				$permits[] = 'permit_delete_poll';
 				foreach($permits as $optionname) {
 					$value = qa_opt($optionname);
 					$optionfield=array(
@@ -74,9 +76,22 @@
 					$qid = $this->content['q_view']['raw']['postid'];
 					$author = $this->content['q_view']['raw']['userid'];
 
-					if(@$poll[$qid]) { // is a poll
-					
+					if(isset($poll[$qid])) { // is a poll
+						
 						$this->poll = $poll[$qid];
+
+						if(qa_post_text('poll_delete') && (!qa_user_permit_error('permit_delete_poll') || qa_get_logged_in_userid() == $author)) {
+							$this->deletePoll($qid);
+							$this->content['error'] = 'Poll deleted.';
+							return;
+						}
+						else if (qa_post_text('poll_close') && (!qa_user_permit_error('permit_close_poll') || qa_get_logged_in_userid() == $author)) {
+							$this->closePoll($qid);
+						}
+						else if (qa_post_text('poll_reopen') && (!qa_user_permit_error('permit_close_poll') || qa_get_logged_in_userid() == $author)) {
+							$this->reopenPoll($qid);
+						}
+						
 						
 					// add post elements
 					
@@ -205,7 +220,7 @@ function pollVote(qid,uid,vid,cancel) {
 
 			// do voting
 
-			if($vid && $uid && qa_permit_check('permit_vote_poll')) {
+			if($vid && $uid && qa_permit_check('permit_vote_poll') && $this->poll != 3) {
 				$vid = (int)$vid;
 				foreach ($answers as $idx => $answer) {
 					$votes = explode(',',$answer['votes']);
@@ -249,7 +264,7 @@ function pollVote(qid,uid,vid,cancel) {
 			
 			foreach ($answers as $idx => $answer) {
 				
-				if(!$uid || !qa_permit_check('permit_vote_poll')) {
+				if(!$uid || !qa_permit_check('permit_vote_poll') || $this->poll > 9) {
 					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_lang('polls/disabled_button')).'"></div>';
 					continue;
 				}
@@ -283,9 +298,40 @@ function pollVote(qid,uid,vid,cancel) {
 				
 				$out .= '</tr></table></div>';
 			}
+			if($this->poll > 9) { // poll closed
+				$out .= '<div class="qa-poll-closed">'.qa_lang('polls/poll_closed').'</div>';
+				if(!qa_user_permit_error('permit_close_poll') || qa_get_logged_in_userid() == $author) 
+					$out .= '<input type="submit" class="qa-poll-button" title="'.qa_lang('polls/reopen_poll_hover').'" value="'.qa_lang('polls/reopen_poll').'" name="poll_reopen">';
+			}
+			else if(!qa_user_permit_error('permit_close_poll') || qa_get_logged_in_userid() == $author) 
+				$out .= '<input type="submit" class="qa-poll-button" title="'.qa_lang('polls/close_poll_hover').'" value="'.qa_lang('polls/close_poll').'" name="poll_close">';
+			if(!qa_user_permit_error('permit_delete_poll') || qa_get_logged_in_userid() == $author) 
+				$out .= '<input type="submit" class="qa-poll-button" title="'.qa_lang('polls/delete_poll_hover').'" value="'.qa_lang('polls/delete_poll').'" name="poll_delete">';
+				
 			$out .= '</div>';
 			
 			return $out;
+		}
+		
+		function deletePoll($qid) {
+			qa_db_query_sub(
+				'DELETE FROM ^postmeta WHERE post_id=# AND meta_key=$',
+				$qid,'is_poll'
+			);
+		}
+		function closePoll($qid) {
+			qa_db_query_sub(
+				'UPDATE ^postmeta SET meta_value=# WHERE post_id=# AND meta_key=$',
+				10+$this->poll,$qid,'is_poll'
+			);
+			$this->poll = $this->poll+10;
+		}
+		function reopenPoll($qid) {
+			qa_db_query_sub(
+				'UPDATE ^postmeta SET meta_value=# WHERE post_id=# AND meta_key=$',
+				$this->poll-10,$qid,'is_poll'
+			);
+			$this->poll = $this->poll-10;
 		}
 		
 	}

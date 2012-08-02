@@ -27,6 +27,18 @@
 	return array(
 		'permit_post_poll' => 'Create polls',
 		'permit_vote_poll' => 'Vote on polls',
+		'permit_close_poll' => 'Close any poll',
+		'permit_delete_poll' => 'Delete any poll',
+		'permit_delete_poll' => 'Delete any poll',
+		
+		'reopen_poll' => 'Reopen',
+		'reopen_poll_hover' => 'Reopen poll',
+		'close_poll' => 'Close',
+		'close_poll_hover' => 'Close poll',
+		'delete_poll' => 'Delete',
+		'delete_poll_hover' => 'Delete poll',
+		
+		'poll_closed' => 'Poll closed',
 
 		'question_title' => '[poll]',
 		'comments' => '[poll]',
