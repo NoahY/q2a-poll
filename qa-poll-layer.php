@@ -201,6 +201,9 @@ function pollVote(qid,uid,vid,cancel) {
 	// worker
 	
 		function getPollDiv($qid,$uid,$vid=null,$cancel=false) {
+
+			$author = $this->content['q_view']['raw']['userid'];
+			
 			if(!$this->poll) {
 				$this->poll = qa_db_read_one_value(
 					qa_db_query_sub(
@@ -218,9 +221,21 @@ function pollVote(qid,uid,vid,cancel) {
 				)
 			);
 
+			$voted = false;
+			
+			if($this->poll != 2) {
+				foreach ($answers as $idx => $answer) {
+					$votes = explode(',',$answer['votes']);
+					if(in_array($uid,$votes)) {
+						$voted = true;
+						break;
+					}
+				}
+			}
+
 			// do voting
 
-			if($vid && $uid && qa_permit_check('permit_vote_poll') && $this->poll != 3) {
+			if($vid && $uid && qa_permit_check('permit_vote_poll') && $this->poll < 9 && (qa_opt('poll_vote_change') || !$voted || $this->poll == 2)) { // not closed, note voted or can change vote
 				$vid = (int)$vid;
 				foreach ($answers as $idx => $answer) {
 					$votes = explode(',',$answer['votes']);
@@ -228,14 +243,13 @@ function pollVote(qid,uid,vid,cancel) {
 					if($answer['id'] == $vid && !$cancel) {
 						
 						if(in_array($uid,$votes)) return '### you\'ve already voted, cheater!';
-						
 						$answers[$idx]['votes'] = ($answers[$idx]['votes']?$answers[$idx]['votes'].',':'').$uid;
 						qa_db_query_sub(
 							'UPDATE ^polls SET votes=$ WHERE id=#',
 							$answers[$idx]['votes'], $vid
 						);
 					}
-					else if(in_array($uid,$votes) && ($this->poll != 2 || ($cancel && $answer['id'] == $vid))) {
+					else if(in_array($uid,$votes) && ($this->poll != 2 || ($cancel && $answer['id'] == $vid))) { // unvoting
 						foreach($votes as $i => $vote) {
 							if($uid == $vote) {
 								unset($votes[$i]);
@@ -248,6 +262,8 @@ function pollVote(qid,uid,vid,cancel) {
 							'UPDATE ^polls SET votes=$ WHERE id=#',
 							$answers[$idx]['votes'], $answer['id']
 						);
+						if($this->poll != 2) // cancel voted on unvoting
+							$voted = in_array($uid,$votes);
 					}
 				}
 			}
@@ -261,19 +277,22 @@ function pollVote(qid,uid,vid,cancel) {
 			// check if voted
 			
 			$allow = true;
-			
+				
 			foreach ($answers as $idx => $answer) {
-				
-				if(!$uid || !qa_permit_check('permit_vote_poll') || $this->poll > 9) {
-					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_lang('polls/disabled_button')).'"></div>';
-					continue;
-				}
-				
 				$votes = explode(',',$answer['votes']);
-				if(!in_array($uid,$votes))
+
+				if(!$uid || !qa_permit_check('permit_vote_poll') || $this->poll > 9 || ($voted && !qa_opt('poll_vote_change') && !in_array($uid,$votes) && $this->poll != 2)) {
+					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_lang('polls/disabled_button')).'"></div>';
+				}
+				else if($voted && !qa_opt('poll_vote_change') && $this->poll != 2) { // voted for this one, can't change, not multiple
+					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_lang('polls/voted_button')).'" onclick="alert(\''.qa_lang('polls/cannot_change').'\')"></div>';
+				}
+				else if(!in_array($uid,$votes))
 					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_lang('polls/vote_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
 				else {
 					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_lang('polls/voted_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].',1)"></div>';
+					
+					$voted = true;
 				}
 			}
 
@@ -283,11 +302,14 @@ function pollVote(qid,uid,vid,cancel) {
 				if(!$answer['votes']) $votes = array();
 				else $votes = explode(',',$answer['votes']);
 				
-				$out .= '<div class="qa-poll-choice">'.@$answer['vote'].'<span class="qa-poll-choice-title">'.qa_html($answer['content']).'</span> ('.(count($votes)==1?qa_lang('main/1_vote'):str_replace('^',count($votes),qa_lang('main/x_votes'))).')';
+				$out .= '<div class="qa-poll-choice">'.@$answer['vote'].'<span class="qa-poll-choice-title">'.qa_html($answer['content']).'</span>';
+				
+				if(!qa_opt('poll_votes_hide') || $voted || qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN)
+					$out .= ' ('.(count($votes)==1?qa_lang('main/1_vote'):str_replace('^',count($votes),qa_lang('main/x_votes'))).')';
 				
 				$out .= '<table class="qa-poll-votes"><tr>';
 				
-				if($answer['votes']) {
+				if($answer['votes'] && (!qa_opt('poll_votes_hide') || $voted || qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN)) { // don't show if user hasn't voted and admin option is checked
 					
 					$c = 0;
 					while( ($c++) < count($votes)) {

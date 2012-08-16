@@ -117,6 +117,8 @@
 				);			
 				qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
 				qa_opt('poll_enable_subnav',(bool)qa_post_text('poll_enable_subnav'));
+				qa_opt('poll_votes_hide',(bool)qa_post_text('poll_votes_hide'));
+				qa_opt('poll_vote_change',(bool)qa_post_text('poll_vote_change'));
 				qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
 
 				qa_opt('poll_css',qa_post_text('poll_css'));
@@ -145,6 +147,20 @@
 				'label' => 'Show poll link in questions sub-nav',
 				'tags' => 'NAME="poll_enable_subnav"',
 				'value' => qa_opt('poll_enable_subnav'),
+				'type' => 'checkbox',
+			);
+
+			$fields[] = array(
+				'label' => 'Allow users to change their votes',
+				'tags' => 'NAME="poll_vote_change"',
+				'value' => qa_opt('poll_vote_change'),
+				'type' => 'checkbox',
+			);
+
+			$fields[] = array(
+				'label' => 'Hide poll votes from users who haven\'t voted yet',
+				'tags' => 'NAME="poll_votes_hide"',
+				'value' => qa_opt('poll_votes_hide'),
 				'type' => 'checkbox',
 			);
 
