@@ -277,9 +277,14 @@ function pollVote(qid,uid,vid,cancel) {
 			// check if voted
 			
 			$allow = true;
-				
+			
+			$totalvotes = 0;
+			
 			foreach ($answers as $idx => $answer) {
-				$votes = explode(',',$answer['votes']);
+				if(!$answer['votes']) $votes = array();
+				else $votes = explode(',',$answer['votes']);
+				
+				$totalvotes += count($votes);
 
 				if(!$uid || !qa_permit_check('permit_vote_poll') || $this->poll > 9 || ($voted && !qa_opt('poll_vote_change') && !in_array($uid,$votes) && $this->poll != 2)) {
 					$answers[$idx]['vote'] = '<div class="qa-poll-disabled-button" title="'.qa_html(qa_lang('polls/disabled_button')).'"></div>';
@@ -304,8 +309,9 @@ function pollVote(qid,uid,vid,cancel) {
 				
 				$out .= '<div class="qa-poll-choice">'.@$answer['vote'].'<span class="qa-poll-choice-title">'.qa_html($answer['content']).'</span>';
 				
-				if(!qa_opt('poll_votes_hide') || $voted || qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN)
-					$out .= ' ('.(count($votes)==1?qa_lang('main/1_vote'):str_replace('^',count($votes),qa_lang('main/x_votes'))).')';
+				if(!qa_opt('poll_votes_hide') || $voted || qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
+					$out .= ' ('.(count($votes)==1?qa_lang('main/1_vote'):str_replace('^',count($votes),qa_lang('main/x_votes'))).(qa_opt('poll_votes_percent') && !empty($votes) > 0? ', '.round(100*count($votes)/$totalvotes).'%' : '').')';
+				}
 				
 				$out .= '<table class="qa-poll-votes"><tr>';
 				

@@ -118,6 +118,7 @@
 				qa_opt('poll_enable',(bool)qa_post_text('poll_enable'));
 				qa_opt('poll_enable_subnav',(bool)qa_post_text('poll_enable_subnav'));
 				qa_opt('poll_votes_hide',(bool)qa_post_text('poll_votes_hide'));
+				qa_opt('poll_votes_percent',(bool)qa_post_text('poll_votes_percent'));
 				qa_opt('poll_vote_change',(bool)qa_post_text('poll_vote_change'));
 				qa_opt('poll_update_on_vote',(bool)qa_post_text('poll_update_on_vote'));
 
@@ -161,6 +162,13 @@
 				'label' => 'Hide poll votes from users who haven\'t voted yet',
 				'tags' => 'NAME="poll_votes_hide"',
 				'value' => qa_opt('poll_votes_hide'),
+				'type' => 'checkbox',
+			);
+
+			$fields[] = array(
+				'label' => 'Show percent on poll votes',
+				'tags' => 'NAME="poll_votes_percent"',
+				'value' => qa_opt('poll_votes_percent'),
 				'type' => 'checkbox',
 			);
 
