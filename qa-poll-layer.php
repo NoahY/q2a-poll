@@ -293,9 +293,9 @@ function pollVote(qid,uid,vid,cancel) {
 					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_lang('polls/voted_button')).'" onclick="alert(\''.qa_lang('polls/cannot_change').'\')"></div>';
 				}
 				else if(!in_array($uid,$votes))
-					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_lang('polls/vote_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].')"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-vote-button" title="'.qa_html(qa_lang('polls/vote_button')).'" onclick="pollVote('.$qid.",'".$uid."',".$answer['id'].')"></div>';
 				else {
-					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_lang('polls/voted_button')).'" onclick="pollVote('.$qid.','.$uid.','.$answer['id'].',1)"></div>';
+					$answers[$idx]['vote'] = '<div class="qa-poll-voted-button" title="'.qa_html(qa_lang('polls/voted_button')).'" onclick="pollVote('.$qid.",'".$uid."',".$answer['id'].',1)"></div>';
 					
 					$voted = true;
 				}
